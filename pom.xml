@@ -6,13 +6,13 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.7.15</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath/>
     </parent>
     <groupId>com.lfg</groupId>
-    <artifactId>ql_day1</artifactId>
+    <artifactId>qr_day1</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>ql_day1</name>
-    <description>ql_day1</description>
+    <name>qr_day1</name>
+    <description>qr_day1</description>
     <properties>
         <java.version>1.8</java.version>
     </properties>
