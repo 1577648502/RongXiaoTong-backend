@@ -1,4 +1,4 @@
-package com.lfg.ql_day1;
+package com.lfg.qr_day1;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

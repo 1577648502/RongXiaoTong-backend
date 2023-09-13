@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lfg.qr_day1.mapper.StudentMapper">
+
+    <resultMap id="BaseResultMap" type="com.lfg.qr_day1.domain.Student">
+            <id property="student_id" column="student_id" jdbcType="BIGINT"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="weight" column="weight" jdbcType="FLOAT"/>
+            <result property="height" column="height" jdbcType="INTEGER"/>
+            <result property="price" column="price" jdbcType="DECIMAL"/>
+            <result property="create_time" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="birthday" column="birthday" jdbcType="DATE"/>
+            <result property="deleted" column="deleted" jdbcType="SMALLINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        student_id,name,weight,
+        height,price,create_time,
+        birthday,deleted
+    </sql>
+</mapper>
