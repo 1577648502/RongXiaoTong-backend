@@ -15,5 +15,9 @@ import java.util.List;
 public interface StudentService extends IService<Student> {
 
     List<Student> getStudent();
+    Student getStudentById(Integer id);
+    void addStudent(Student student);
+    void updateStudent(Student student);
+    void deleteStudent(Integer id);
 
 }

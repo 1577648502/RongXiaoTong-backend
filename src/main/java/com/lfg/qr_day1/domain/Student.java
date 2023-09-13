@@ -28,7 +28,7 @@ public class Student implements Serializable {
     private String name;
 
     /**
-     * 年龄
+     * 体重
      */
     private Double weight;
 
