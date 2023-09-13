@@ -4,6 +4,8 @@ import com.lfg.qr_day1.domain.Student;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
 * @author liufaguang
 * @description 针对表【student】的数据库操作Service
@@ -12,6 +14,6 @@ import org.springframework.stereotype.Service;
  */
 public interface StudentService extends IService<Student> {
 
-    Student getStudent();
+    List<Student> getStudent();
 
 }

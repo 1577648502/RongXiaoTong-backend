@@ -20,9 +20,9 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student>
     @Resource
     private StudentMapper studentMapper;
     @Override
-    public Student getStudent() {
-        Student student = studentMapper.selectOne(null);
-        return student;
+    public List<Student> getStudent() {
+        List<Student> students = studentMapper.selectList(null);
+        return students;
     }
 }
 

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Controller
 @RequestMapping("/user")
@@ -14,8 +15,8 @@ public class UserController {
     @Resource
     private StudentService studentService;
     @GetMapping("/getUser")
-    public Student getUser() {
-        Student serviceStudent = studentService.getStudent();
+    public List<Student> getUser() {
+        List<Student> serviceStudent = studentService.getStudent();
         System.out.println(serviceStudent);
         return serviceStudent;
     }
