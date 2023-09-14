@@ -1,5 +1,6 @@
 package com.lfg.qr_day1.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lfg.qr_day1.domain.Student;
 import com.lfg.qr_day1.service.StudentService;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author liufaguang
@@ -65,6 +67,20 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student>
             return;
         }
         studentMapper.deleteById(id);
+    }
+
+    @Override
+    public List<Student> getStudentByName(Student student) {
+        LambdaQueryWrapper<Student> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.like(student.getName() != null, Student::getName, student.getName());
+        lambdaQueryWrapper.like(student.getStudent_id() != null, Student::getStudent_id, student.getStudent_id());
+        lambdaQueryWrapper.like(student.getPrice() != null, Student::getPrice, student.getPrice());
+        lambdaQueryWrapper.like(student.getHeight() != null, Student::getHeight, student.getHeight());
+        lambdaQueryWrapper.like(student.getWeight() != null, Student::getWeight, student.getWeight());
+        lambdaQueryWrapper.like(student.getCreate_time() != null, Student::getCreate_time, student.getCreate_time());
+        lambdaQueryWrapper.like(student.getDeleted() != null, Student::getDeleted, student.getDeleted());
+        lambdaQueryWrapper.like(student.getBirthday() != null, Student::getBirthday, student.getBirthday());
+        return studentMapper.selectList(lambdaQueryWrapper);
     }
 }
 

@@ -8,7 +8,7 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
 server:
   port: 8080
-#  ????
+# 日志
 logging:
   level:
     com.lfg.qr_day1.service: debug
