@@ -1,5 +1,6 @@
 package com.lfg.qr_day1.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lfg.qr_day1.domain.Student;
 import com.lfg.qr_day1.service.StudentService;
 import org.springframework.stereotype.Controller;
