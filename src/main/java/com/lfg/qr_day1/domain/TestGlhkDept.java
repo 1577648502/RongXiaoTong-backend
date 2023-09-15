@@ -9,7 +9,7 @@ import lombok.Data;
  * 
  * @TableName 部门表实体类
  */
-@TableName(value ="部门表实体类")
+@TableName(value ="test_glhk_dept")
 @Data
 public class TestGlhkDept implements Serializable {
     /**

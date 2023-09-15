@@ -100,4 +100,19 @@ class QlDay1ApplicationTests {
             System.out.println(testGlhkDeptBean);
         }
     }
+
+    @Test
+    void addTestGlhkUser(){
+        TestGlhkUser testGlhkUser = new TestGlhkUser();
+        testGlhkUser.setUserName("test1");
+        testGlhkUser.setUserNo("123456789");
+        testGlhkUser.setTestGlhkDeptId(3);
+        TestGlhkUser glhkUser = testGlhkUserService.insertUser(testGlhkUser);
+        System.out.println( glhkUser);
+    }
+    @Test
+    void delTestGlhkUser(){
+        TestGlhkUser glhkUser = testGlhkUserService.deleteUser(12);
+        System.out.println( glhkUser);
+    }
 }

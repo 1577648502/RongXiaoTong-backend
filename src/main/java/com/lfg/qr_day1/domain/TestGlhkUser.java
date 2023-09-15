@@ -11,7 +11,7 @@ import lombok.Data;
  * 
  * @TableName 员工表实体类
  */
-@TableName(value ="员工表实体类")
+@TableName(value ="test_glhk_user")
 @Data
 public class TestGlhkUser implements Serializable {
     /**

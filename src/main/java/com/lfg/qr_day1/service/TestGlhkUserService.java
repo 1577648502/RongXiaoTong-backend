@@ -13,4 +13,10 @@ import java.util.List;
 public interface TestGlhkUserService extends IService<TestGlhkUser> {
     List<TestGlhkUser> getUserAll();
 
+    TestGlhkUser insertUser(TestGlhkUser testGlhkUser);
+
+    TestGlhkUser updateUser(TestGlhkUser testGlhkUser);
+
+    TestGlhkUser deleteUser(Integer testGlhkUserId);
+
 }

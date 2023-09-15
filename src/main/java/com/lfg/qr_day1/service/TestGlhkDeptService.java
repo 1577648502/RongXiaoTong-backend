@@ -15,4 +15,10 @@ public interface TestGlhkDeptService extends IService<TestGlhkDept> {
 
     List<TestGlhkDeptBean> selectAll();
 
+    TestGlhkDept insertGlhk(TestGlhkDept testGlhkDept);
+
+    TestGlhkDept updateGlhk(TestGlhkDept testGlhkDept);
+
+    TestGlhkDept deleteGlhk(Integer testGlhkDeptId);
+
 }

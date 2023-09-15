@@ -51,6 +51,33 @@ public class TestGlhkDeptServiceImpl extends ServiceImpl<TestGlhkDeptMapper, Tes
         //返回所以部门信息和部门下的员工信息
         return testGlhkDeptBean;
     }
+
+    @Override
+    public TestGlhkDept insertGlhk(TestGlhkDept testGlhkDept) {
+        int insert = testGlhkDeptMapper.insert(testGlhkDept);
+        if (insert > 0) {
+            return testGlhkDept;
+        }
+        throw new RuntimeException("插入失败");
+    }
+
+    @Override
+    public TestGlhkDept updateGlhk(TestGlhkDept testGlhkDept) {
+        int update = testGlhkDeptMapper.updateById(testGlhkDept);
+        if (update > 0) {
+            return testGlhkDept;
+        }
+        throw new RuntimeException("更新失败");
+    }
+
+    @Override
+    public TestGlhkDept deleteGlhk(Integer  testGlhkDeptId) {
+        int delete = testGlhkDeptMapper.deleteById(testGlhkDeptId);
+        if (delete > 0) {
+            return testGlhkDeptMapper.selectById(testGlhkDeptId);
+        }
+        throw new RuntimeException("删除失败");
+    }
 }
 
 
