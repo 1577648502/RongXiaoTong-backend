@@ -1,8 +1,8 @@
 package com.lfg.qr_day1.controller;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lfg.qr_day1.domain.Student;
 import com.lfg.qr_day1.service.StudentService;
+import com.lfg.qr_day1.utius.R;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,8 +16,8 @@ public class UserController {
     @Resource
     private StudentService studentService;
     @GetMapping("/getUser")
-    public List<Student> getUser() {
-        List<Student> serviceStudent = studentService.getStudent();
+    public R<List<Student>> getUser() {
+        R<List<Student>> serviceStudent = studentService.getStudent();
         System.out.println(serviceStudent);
         return serviceStudent;
     }

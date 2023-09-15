@@ -1,19 +1,18 @@
 package com.lfg.qr_day1.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+
 import com.lfg.qr_day1.domain.Student;
 import com.lfg.qr_day1.service.StudentService;
 import com.lfg.qr_day1.mapper.StudentMapper;
+import com.lfg.qr_day1.utius.R;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * @author liufaguang
@@ -29,8 +28,12 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student>
 
     @Override
     //获取所有学生信息List
-    public List<Student> getStudent() {
-        return studentMapper.selectList(null);
+    public R<List<Student>> getStudent() {
+//        return studentMapper.selectList(null);
+        Page<Student> pageInfo = new Page<>(1, 20);
+        Page<Student> studentPage = studentMapper.selectPage(pageInfo, null);
+        R<List<Student>> success = R.success(studentPage.getRecords());
+        return success;
     }
     @Override
     //按id获取学生信息
@@ -63,7 +66,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student>
     }
 
     @Override
-    //删除学生信息
+    //按id删除学生信息
     public void deleteStudent(Integer id) {
         if (id == null) {
             return;
@@ -72,17 +75,30 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student>
     }
 
     @Override
+    //批量删除学生信息
+    public void deleteStudentByIds(Integer[] ids) {
+        if (ids == null || ids.length == 0) {
+            return;
+        }
+        List<Integer> list = Arrays.asList(ids);
+        LambdaQueryWrapper<Student> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.in(Student::getStudentId, list);
+        studentMapper.delete(lambdaQueryWrapper);
+    }
+
+
+    @Override
     //按多条件模糊查询学生信息
     public List<Student> getStudentByName(Student student) {
         LambdaQueryWrapper<Student> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.like(student.getName() != null, Student::getName, student.getName());
-        lambdaQueryWrapper.like(student.getStudent_id() != null, Student::getStudent_id, student.getStudent_id());
-        lambdaQueryWrapper.like(student.getPrice() != null, Student::getPrice, student.getPrice());
-        lambdaQueryWrapper.like(student.getHeight() != null, Student::getHeight, student.getHeight());
-        lambdaQueryWrapper.like(student.getWeight() != null, Student::getWeight, student.getWeight());
-        lambdaQueryWrapper.gt(student.getCreate_time() != null, Student::getCreate_time, student.getCreate_time());
+        lambdaQueryWrapper.like(student.getStuName() != null, Student::getStuName, student.getStuName());
+        lambdaQueryWrapper.like(student.getStudentId() != null, Student::getStudentId, student.getStudentId());
+        lambdaQueryWrapper.like(student.getBorthday() != null, Student::getBorthday, student.getBorthday());
+        lambdaQueryWrapper.like(student.getDefac() != null, Student::getDefac, student.getDefac());
+        lambdaQueryWrapper.like(student.getVersion() != null, Student::getVersion, student.getVersion());
+        lambdaQueryWrapper.gt(student.getCreateTime() != null, Student::getCreateTime, student.getCreateTime());
         lambdaQueryWrapper.like(student.getDeleted() != null, Student::getDeleted, student.getDeleted());
-        lambdaQueryWrapper.lt(student.getBirthday() != null, Student::getBirthday, student.getBirthday());
+        lambdaQueryWrapper.lt(student.getHeight() != null, Student::getHeight, student.getHeight());
         return studentMapper.selectList(lambdaQueryWrapper);
     }
 }

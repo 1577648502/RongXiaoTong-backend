@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 
 import lombok.AllArgsConstructor;
@@ -13,64 +12,39 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 学生
- * @TableName student
+ * 班级
+ * @TableName stu_class
  */
-@TableName(value ="student")
+@TableName(value ="stu_class")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Student implements Serializable {
+public class StuClass implements Serializable {
     /**
-     * 学生
+     * 班级ID
      */
     @TableId(type = IdType.AUTO)
-    private Long studentId;
+    private Long stuClassId;
 
     /**
-     * 班级
+     * 班级名称
      */
-    private Integer stuClassId;
+    private String className;
 
     /**
-     * 姓名
+     * 班级地址
      */
-    private String stuName;
-
-    /**
-     * 分数
-     */
-    private BigDecimal defac;
-
-    /**
-     * 创建日期
-     */
-    private Date createTime;
-
-    /**
-     * 生日
-     */
-    private Date borthday;
-
-    /**
-     * 版本
-     */
-    private Integer version;
-
-    /**
-     * 逻辑删除
-     */
-    private Integer deleted;
+    private String classAddress;
 
     /**
      * 
      */
-    private Integer stuSex;
+    private Integer countStu;
 
     /**
      * 
      */
-    private BigDecimal height;
+    private Date inDate;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

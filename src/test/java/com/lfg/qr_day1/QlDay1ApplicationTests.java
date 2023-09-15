@@ -1,14 +1,17 @@
 package com.lfg.qr_day1;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lfg.qr_day1.domain.Student;
+import com.lfg.qr_day1.domain.TestGlhkUser;
+import com.lfg.qr_day1.domain.beans.TestGlhkDeptBean;
 import com.lfg.qr_day1.service.StudentService;
+import com.lfg.qr_day1.service.TestGlhkDeptService;
+import com.lfg.qr_day1.service.TestGlhkUserService;
+import com.lfg.qr_day1.utius.R;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.annotation.Resource;
-import javax.sound.midi.VoiceStatus;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -17,15 +20,20 @@ import java.util.List;
 class QlDay1ApplicationTests {
     @Resource
     private StudentService studentService;
-
+    @Resource
+    private TestGlhkUserService testGlhkUserService;
+    @Resource
+    private TestGlhkDeptService testGlhkDeptService;
     @Test
         //分页获取所以学生信息
     void getAll() {
-        Page<Student> pageInfo = new Page<>(1, 20);
-        studentService.page(pageInfo, null);
-        for (Student student:pageInfo.getRecords()){
-            System.out.println(student);
-        }
+        R<List<Student>> student = studentService.getStudent();
+        System.out.println(student);
+//        Page<Student> pageInfo = new Page<>(1, 20);
+//        studentService.page(pageInfo, null);
+//        for (Student student:pageInfo.getRecords()){
+//            System.out.println(student);
+//        }
     }
 
     @Test
@@ -39,12 +47,11 @@ class QlDay1ApplicationTests {
         //添加学生信息
     void add() {
         Student student = new Student();
-        student.setName("张三");
-        student.setWeight(18.0);
-        student.setHeight(111);
-        student.setPrice(BigDecimal.valueOf(529.41));
-        student.setBirthday(new Date());
-        student.setCreate_time(new Date());
+        student.setStuName("张三");
+        student.setVersion((int) 18.0);
+        student.setHeight(BigDecimal.valueOf(111.01));
+        student.setDefac(BigDecimal.valueOf(529.41));
+        student.setCreateTime(new Date());
         student.setDeleted(0);
         studentService.addStudent(student);
     }
@@ -53,8 +60,8 @@ class QlDay1ApplicationTests {
         //修改学生信息
     void update() {
         Student student = new Student();
-        student.setStudent_id(1005L);
-        student.setName("陈森凯");
+        student.setStudentId(1025L);
+        student.setStuName("陈森凯");
         studentService.updateStudent(student);
     }
 
@@ -68,17 +75,29 @@ class QlDay1ApplicationTests {
     @Test
     void queryWrapper() {
         LambdaQueryWrapper<Student> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        LambdaQueryWrapper<Student> equals = lambdaQueryWrapper.eq(Student::getName, "张三");
+        LambdaQueryWrapper<Student> equals = lambdaQueryWrapper.eq(Student::getStuName, "张三");
         List<Student> student = studentService.list(equals);
         System.out.println(student);
     }
 
     @Test
     void getStudentByName() {
-        Student student = new Student(100l, "森凯", 18.01, 111, null, null, null, null);
+        Student student = new Student();
         List<Student> studentByName = studentService.getStudentByName(student);
         System.out.println(studentByName);
     }
 
-
+    @Test
+    void getTestGlhkUserAll(){
+        List<TestGlhkUser> userAll = testGlhkUserService.getUserAll();
+        for (TestGlhkUser testGlhkUser : userAll)
+            System.out.println(testGlhkUser);
+    }
+    @Test
+    void getTestGlhkDeptAll(){
+        List<TestGlhkDeptBean> testGlhkDeptBeans = testGlhkDeptService.selectAll();
+        for (TestGlhkDeptBean testGlhkDeptBean : testGlhkDeptBeans){
+            System.out.println(testGlhkDeptBean);
+        }
+    }
 }

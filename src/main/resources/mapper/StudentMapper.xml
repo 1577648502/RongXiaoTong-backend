@@ -5,19 +5,22 @@
 <mapper namespace="com.lfg.qr_day1.mapper.StudentMapper">
 
     <resultMap id="BaseResultMap" type="com.lfg.qr_day1.domain.Student">
-            <id property="student_id" column="student_id" jdbcType="BIGINT"/>
-            <result property="name" column="name" jdbcType="VARCHAR"/>
-            <result property="weight" column="weight" jdbcType="FLOAT"/>
-            <result property="height" column="height" jdbcType="INTEGER"/>
-            <result property="price" column="price" jdbcType="DECIMAL"/>
-            <result property="create_time" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="birthday" column="birthday" jdbcType="DATE"/>
+            <id property="studentId" column="student_id" jdbcType="BIGINT"/>
+            <result property="stuClassId" column="stu_class_id" jdbcType="INTEGER"/>
+            <result property="stuName" column="stu_name" jdbcType="VARCHAR"/>
+            <result property="defac" column="defac" jdbcType="DECIMAL"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="borthday" column="borthday" jdbcType="DATE"/>
+            <result property="version" column="version" jdbcType="SMALLINT"/>
             <result property="deleted" column="deleted" jdbcType="SMALLINT"/>
+            <result property="stuSex" column="stu_sex" jdbcType="INTEGER"/>
+            <result property="height" column="height" jdbcType="DECIMAL"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        student_id,name,weight,
-        height,price,create_time,
-        birthday,deleted
+        student_id,stu_class_id,stu_name,
+        defac,create_time,borthday,
+        version,deleted,stu_sex,
+        height
     </sql>
 </mapper>

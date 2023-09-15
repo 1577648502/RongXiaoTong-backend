@@ -1,9 +1,8 @@
 package com.lfg.qr_day1.service;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.lfg.qr_day1.domain.Student;
 import com.baomidou.mybatisplus.extension.service.IService;
-import org.springframework.stereotype.Service;
+import com.lfg.qr_day1.domain.Student;
+import com.lfg.qr_day1.utius.R;
 
 import java.util.List;
 
@@ -13,7 +12,7 @@ import java.util.List;
  * @createDate 2023-09-12 15:41:59
  */
 public interface StudentService extends IService<Student> {
-    List<Student> getStudent();
+    R<List<Student>> getStudent();
 
     Student getStudentById(Integer id);
 
@@ -23,6 +22,10 @@ public interface StudentService extends IService<Student> {
 
     void deleteStudent(Integer id);
 
+    //批量按id删除
+    void deleteStudentByIds(Integer[] ids);
+
     List<Student> getStudentByName(Student student);
+
 
 }
