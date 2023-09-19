@@ -28,11 +28,11 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student>
 
     @Override
     //获取所有学生信息List
-    public R<List<Student>> getStudent() {
+    public List<Student> getStudent() {
 //        return studentMapper.selectList(null);
         Page<Student> pageInfo = new Page<>(1, 20);
         Page<Student> studentPage = studentMapper.selectPage(pageInfo, null);
-        R<List<Student>> success = R.success(studentPage.getRecords());
+        List<Student> success = studentPage.getRecords();
         return success;
     }
     @Override

@@ -2,6 +2,7 @@ spring:
   datasource:
 #    url: jdbc:mysql://localhost:3306/qr_db?useUnicode=true&characterEncoding=utf-8&use
     url: jdbc:mysql://114.132.232.133:3306/qr_db
+#    url: jdbc:mysql://20.187.89.187:3306/qr_db
     username: qr_db
     password: 12345678
     driver-class-name: com.mysql.cj.jdbc.Driver

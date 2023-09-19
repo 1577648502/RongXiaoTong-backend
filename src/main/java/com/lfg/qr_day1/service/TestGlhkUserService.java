@@ -2,6 +2,7 @@ package com.lfg.qr_day1.service;
 
 import com.lfg.qr_day1.domain.TestGlhkUser;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lfg.qr_day1.domain.beans.TestGlhkUserBean;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
 * @createDate 2023-09-15 14:45:12
 */
 public interface TestGlhkUserService extends IService<TestGlhkUser> {
-    List<TestGlhkUser> getUserAll();
+    List<TestGlhkUserBean> getUserAll();
 
     TestGlhkUser insertUser(TestGlhkUser testGlhkUser);
 

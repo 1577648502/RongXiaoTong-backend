@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lfg.qr_day1.domain.TestGlhkDept;
 import com.lfg.qr_day1.domain.TestGlhkUser;
+import com.lfg.qr_day1.domain.beans.TestGlhkDeptBean;
+import com.lfg.qr_day1.domain.beans.TestGlhkUserBean;
 import com.lfg.qr_day1.mapper.TestGlhkDeptMapper;
 import com.lfg.qr_day1.service.TestGlhkUserService;
 import com.lfg.qr_day1.mapper.TestGlhkUserMapper;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,8 +30,28 @@ public class TestGlhkUserServiceImpl extends ServiceImpl<TestGlhkUserMapper, Tes
     private TestGlhkDeptMapper  testGlhkDeptMapper;
 
     @Override
-    public List<TestGlhkUser> getUserAll() {
-        return testGlhkUserMapper.selectList(null);
+    public List<TestGlhkUserBean> getUserAll() {
+        //查询数据库获取所有用户信息
+        List<TestGlhkUser> testGlhkUsers = testGlhkUserMapper.selectList(null);
+        //创建存储部门信息和员工信息的数组
+        List<TestGlhkUserBean> testGlhkUserBeans = new ArrayList<>();
+        //遍历所有用户信息
+        for (TestGlhkUser testGlhkUser : testGlhkUsers) {
+            //获取每个用户的部门id
+            Integer testGlhkDeptId = testGlhkUser.getTestGlhkDeptId();
+            //根据用户的部门id查询部门信息
+            LambdaQueryWrapper<TestGlhkDept> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+            lambdaQueryWrapper.eq(TestGlhkDept::getTestGlhkDeptId, testGlhkDeptId);
+            List<TestGlhkDept> testGlhkDeptList = testGlhkDeptMapper.selectList(lambdaQueryWrapper);
+            //创建存储部门信息和员工信息的Bean对象
+            TestGlhkUserBean glhkUserBean = new TestGlhkUserBean(testGlhkUser);
+            //将部门信息赋值给Bean对象
+            glhkUserBean.setTestGlhkDeptList(testGlhkDeptList);
+            //将Bean对象添加到数组
+            testGlhkUserBeans.add(glhkUserBean);
+        }
+        //返回所有员工信息和部门信息
+        return testGlhkUserBeans;
     }
 
     @Override

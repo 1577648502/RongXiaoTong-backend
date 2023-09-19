@@ -12,7 +12,7 @@ import java.util.List;
  * @createDate 2023-09-12 15:41:59
  */
 public interface StudentService extends IService<Student> {
-    R<List<Student>> getStudent();
+    List<Student> getStudent();
 
     Student getStudentById(Integer id);
 

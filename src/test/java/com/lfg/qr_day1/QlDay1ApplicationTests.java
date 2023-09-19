@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.lfg.qr_day1.domain.Student;
 import com.lfg.qr_day1.domain.TestGlhkUser;
 import com.lfg.qr_day1.domain.beans.TestGlhkDeptBean;
+import com.lfg.qr_day1.domain.beans.TestGlhkUserBean;
 import com.lfg.qr_day1.service.StudentService;
 import com.lfg.qr_day1.service.TestGlhkDeptService;
 import com.lfg.qr_day1.service.TestGlhkUserService;
@@ -27,7 +28,7 @@ class QlDay1ApplicationTests {
     @Test
         //分页获取所以学生信息
     void getAll() {
-        R<List<Student>> student = studentService.getStudent();
+        List<Student> student = studentService.getStudent();
         System.out.println(student);
 //        Page<Student> pageInfo = new Page<>(1, 20);
 //        studentService.page(pageInfo, null);
@@ -89,8 +90,8 @@ class QlDay1ApplicationTests {
 
     @Test
     void getTestGlhkUserAll(){
-        List<TestGlhkUser> userAll = testGlhkUserService.getUserAll();
-        for (TestGlhkUser testGlhkUser : userAll)
+        List<TestGlhkUserBean> userAll = testGlhkUserService.getUserAll();
+        for (TestGlhkUserBean testGlhkUser : userAll)
             System.out.println(testGlhkUser);
     }
     @Test
