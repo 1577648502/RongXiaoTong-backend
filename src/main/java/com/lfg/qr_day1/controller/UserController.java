@@ -1,31 +1,49 @@
 package com.lfg.qr_day1.controller;
 
-import com.lfg.qr_day1.domain.Student;
+import com.lfg.qr_day1.domain.TestGlhkUser;
 import com.lfg.qr_day1.domain.User;
-import com.lfg.qr_day1.service.StudentService;
+import com.lfg.qr_day1.service.TestGlhkUserService;
 import com.lfg.qr_day1.service.UserService;
 import com.lfg.qr_day1.utius.R;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
     @Resource
     private UserService userService;
+    @Resource
+    private TestGlhkUserService testGlhkUserService;
 
-    @PostMapping("/login")
-    public R<User> login(@RequestBody User user, HttpServletRequest request){
-        return userService.login(user,request);
+    @RequestMapping("/getById")
+    public R<TestGlhkUser> getById(Integer id) {
+        if (id == null) {
+            return R.error("id不能为空");
+        }
+        TestGlhkUser testGlhkUser = testGlhkUserService.getUserById(id);
+        if (testGlhkUser == null) {
+            return R.error("用户不存在");
+        }
+        return R.success(testGlhkUser);
     }
 
-    @GetMapping("/info")
-    public  Object info(@RequestBody HttpServletRequest request){
-        return request.getSession().getAttribute("data");
+    @RequestMapping("/login")
+    public R<String> login(@RequestBody User user) {
+        return userService.login(user);
+    }
+    @RequestMapping("/logout")
+    public R<String> logout(HttpServletRequest request) {
+        return userService.logout(request);
+    }
+
+    @RequestMapping("/info")
+    public R<User> info(HttpServletRequest request) {
+        return userService.info(request);
     }
 
 }

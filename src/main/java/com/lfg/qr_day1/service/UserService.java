@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 * @createDate 2023-09-18 15:54:07
 */
 public interface UserService extends IService<User> {
-    R<User> login(User user, HttpServletRequest request);
+    R<String> login(User user);
+    R<String> logout(HttpServletRequest request);
+    R<User> info(HttpServletRequest request);
 
 }

@@ -28,7 +28,7 @@ class QlDay1ApplicationTests {
     @Test
         //分页获取所以学生信息
     void getAll() {
-        List<Student> student = studentService.getStudent();
+        List<Student> student = studentService.getStudent(1,20);
         System.out.println(student);
 //        Page<Student> pageInfo = new Page<>(1, 20);
 //        studentService.page(pageInfo, null);

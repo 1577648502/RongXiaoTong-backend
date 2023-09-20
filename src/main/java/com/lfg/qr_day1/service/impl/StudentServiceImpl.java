@@ -28,12 +28,17 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student>
 
     @Override
     //获取所有学生信息List
-    public List<Student> getStudent() {
+    public Page<Student> getPage(Integer current, Integer size) {
 //        return studentMapper.selectList(null);
-        Page<Student> pageInfo = new Page<>(1, 20);
+        Page<Student> pageInfo = new Page<>(current, size);
         Page<Student> studentPage = studentMapper.selectPage(pageInfo, null);
+        System.out.println(studentPage);
+        Page<Student> page = this.page(studentPage, null);
         List<Student> success = studentPage.getRecords();
-        return success;
+        Object total = studentPage.getTotal();
+//        success.add(total);
+
+        return page;
     }
     @Override
     //按id获取学生信息

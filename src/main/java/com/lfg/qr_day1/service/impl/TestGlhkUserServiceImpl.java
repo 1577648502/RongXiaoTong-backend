@@ -9,6 +9,7 @@ import com.lfg.qr_day1.domain.beans.TestGlhkUserBean;
 import com.lfg.qr_day1.mapper.TestGlhkDeptMapper;
 import com.lfg.qr_day1.service.TestGlhkUserService;
 import com.lfg.qr_day1.mapper.TestGlhkUserMapper;
+import com.lfg.qr_day1.utius.R;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,6 +53,13 @@ public class TestGlhkUserServiceImpl extends ServiceImpl<TestGlhkUserMapper, Tes
         }
         //返回所有员工信息和部门信息
         return testGlhkUserBeans;
+    }
+
+    @Override
+    public TestGlhkUser getUserById(Integer testGlhkUserId) {
+        //根据用户id查询用户信息
+        TestGlhkUser testGlhkUser = this.getById(testGlhkUserId);
+        return testGlhkUser;
     }
 
     @Override

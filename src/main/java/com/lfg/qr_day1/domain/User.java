@@ -46,6 +46,12 @@ public class User implements Serializable {
     private String phoneNumber;
 
     /**
+     * 权限
+     */
+
+    private String roles;
+
+    /**
      * 逻辑删除0/1 1为已删除
      */
 
