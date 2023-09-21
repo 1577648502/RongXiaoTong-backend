@@ -13,7 +13,7 @@ import java.util.List;
  * @createDate 2023-09-12 15:41:59
  */
 public interface StudentService extends IService<Student> {
-    Page<Student> getPage(Integer current , Integer size);
+    Page<Student> getPage(Integer current , Integer size, String sort, String title);
 
     Student getStudentById(Integer id);
 

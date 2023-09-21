@@ -28,16 +28,23 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student>
 
     @Override
     //获取所有学生信息List
-    public Page<Student> getPage(Integer current, Integer size) {
-//        return studentMapper.selectList(null);
+    public Page<Student> getPage(Integer current, Integer size, String sort, String title) {
         Page<Student> pageInfo = new Page<>(current, size);
-        Page<Student> studentPage = studentMapper.selectPage(pageInfo, null);
-        System.out.println(studentPage);
-        Page<Student> page = this.page(studentPage, null);
-        List<Student> success = studentPage.getRecords();
-        Object total = studentPage.getTotal();
-//        success.add(total);
-
+        Page<Student> page = new Page<>();
+        LambdaQueryWrapper<Student> queryWrapper = new LambdaQueryWrapper<>();
+        //排序
+        if (sort != null &&sort.equals("+id")){
+            queryWrapper.orderByAsc(Student::getStudentId);
+            Page<Student> studentPage = studentMapper.selectPage(pageInfo, queryWrapper);
+            queryWrapper.like(title != null, Student::getStuName, title);
+            page = this.page(studentPage, queryWrapper);
+        }
+        if (sort != null &&sort.equals("-id")){
+            queryWrapper.orderByDesc(Student::getStudentId);
+            Page<Student> studentPage = studentMapper.selectPage(pageInfo, queryWrapper);
+            queryWrapper.like(title != null, Student::getStuName, title);
+            page = this.page(studentPage, queryWrapper);
+        }
         return page;
     }
     @Override

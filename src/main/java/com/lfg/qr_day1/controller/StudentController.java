@@ -8,14 +8,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+
 @RestController
 @RequestMapping("/student")
 public class StudentController {
     @Resource
     private StudentService studentService;
+
     @RequestMapping("/getPage")
-    public R<Page<Student>> getPage(Integer page, Integer limit) {
-        Page<Student> students = studentService.getPage(page, limit);
+    public R<Page<Student>> getPage(Integer page, Integer limit, String sort, String title) {
+        Page<Student> students = studentService.getPage(page, limit, sort, title);
         if (students == null) {
             return R.error("获取学生列表失败");
         }
