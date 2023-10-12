@@ -1,25 +1,47 @@
 spring:
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 100MB
   datasource:
-#    url: jdbc:mysql://localhost:3306/qr_db?useUnicode=true&characterEncoding=utf-8&use
-    url: jdbc:mysql://114.132.232.133:3306/qr_db
+    url: jdbc:mysql://localhost:3306/rongxiaotong?useUnicode=true&characterEncoding=utf-8&use
+#    url: jdbc:mysql://rongxiaotong.cewkjb4qqsj3.ap-east-1.rds.amazonaws.com/rongxiaotong?useUnicode=true&characterEncoding=utf-8&use
+#    url: jdbc:mysql://114.132.232.133:3306/qr_db
 #    url: jdbc:mysql://20.187.89.187:3306/qr_db
-    username: qr_db
+#    username: qr_db
+    username: root
     password: 12345678
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
 server:
   port: 8080
+  reactive:
+    session:
+      timeout: 60000s
 # 日志
 logging:
   level:
-    com.lfg.qr_day1.service: debug
+    com.lfg.rongxiaotong.service: debug
 
 mybatis-plus:
   configuration:
+    #在映射实体或者属性时，将数据库中表名和字段名中的下划线去掉，按照驼峰命名法映射
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:
     db-config:
-      logic-delete-field: deleted # 全局逻辑删除的实体字段名
+      #设置id生成算法
+      id-type: ASSIGN_ID
+      logic-delete-field: is_delete # 全局逻辑删除的实体字段名
       logic-delete-value: 1 # 逻辑已删除值（默认为 1）
       logic-not-delete-value: 0 # 逻辑未删除值（默认为 0）
+
+
+rongxiaotong:
+  upload-path: /Users/liufaguang/Downloads/img/
+
+SavePath:
+  ProfilePhoto: '/Users/liufaguang/Downloads/img/'  #图标存储路径
+  ProfilePhotoMapper: '/profilePhoto/'  #图标的映射路径
