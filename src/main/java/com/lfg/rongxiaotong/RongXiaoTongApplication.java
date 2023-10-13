@@ -6,10 +6,10 @@ import org.springframework.context.annotation.Configuration;
 
 @SpringBootApplication
 @Configuration
-public class QrDay1Application {
+public class RongXiaoTongApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(QrDay1Application.class, args);
+        SpringApplication.run(RongXiaoTongApplication.class, args);
     }
 
 }
