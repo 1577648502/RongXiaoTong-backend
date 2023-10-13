@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lfg.rongxiaotong.mapper.TbReserveMapper">
+
+    <resultMap id="BaseResultMap" type="com.lfg.rongxiaotong.domain.TbReserve">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="expertName" column="expert_name" jdbcType="VARCHAR"/>
+            <result property="questioner" column="questioner" jdbcType="VARCHAR"/>
+            <result property="area" column="area" jdbcType="VARCHAR"/>
+            <result property="address" column="address" jdbcType="VARCHAR"/>
+            <result property="plantName" column="plant_name" jdbcType="VARCHAR"/>
+            <result property="soilCondition" column="soil_condition" jdbcType="VARCHAR"/>
+            <result property="plantCondition" column="plant_condition" jdbcType="VARCHAR"/>
+            <result property="plantDetail" column="plant_detail" jdbcType="VARCHAR"/>
+            <result property="phone" column="phone" jdbcType="VARCHAR"/>
+            <result property="message" column="message" jdbcType="VARCHAR"/>
+            <result property="answer" column="answer" jdbcType="VARCHAR"/>
+            <result property="status" column="status" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,expert_name,questioner,
+        area,address,plant_name,
+        soil_condition,plant_condition,plant_detail,
+        phone,message,answer,
+        status
+    </sql>
+</mapper>

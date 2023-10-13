@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lfg.rongxiaotong.mapper.TbShoppingcartMapper">
+
+    <resultMap id="BaseResultMap" type="com.lfg.rongxiaotong.domain.TbShoppingcart">
+            <id property="shoppingId" column="shopping_id" jdbcType="INTEGER"/>
+            <result property="orderId" column="order_id" jdbcType="INTEGER"/>
+            <result property="count" column="count" jdbcType="INTEGER"/>
+            <result property="ownName" column="own_name" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        shopping_id,order_id,count,
+        own_name,create_time,update_time
+    </sql>
+</mapper>

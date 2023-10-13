@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lfg.rongxiaotong.mapper.TbAddressMapper">
+
+    <resultMap id="BaseResultMap" type="com.lfg.rongxiaotong.domain.TbAddress">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="ownName" column="own_name" jdbcType="VARCHAR"/>
+            <result property="consignee" column="consignee" jdbcType="VARCHAR"/>
+            <result property="phone" column="phone" jdbcType="VARCHAR"/>
+            <result property="addressDetail" column="address_detail" jdbcType="VARCHAR"/>
+            <result property="isDefault" column="is_default" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,own_name,consignee,
+        phone,address_detail,is_default
+    </sql>
+</mapper>
