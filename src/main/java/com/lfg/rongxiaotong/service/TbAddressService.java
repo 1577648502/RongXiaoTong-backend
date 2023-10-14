@@ -7,6 +7,7 @@ import com.lfg.rongxiaotong.domain.TbAddress;
 import com.lfg.rongxiaotong.utius.R;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
 * @author liufaguang
@@ -14,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 * @createDate 2023-10-13 19:35:42
 */
 public interface TbAddressService extends IService<TbAddress> {
-    R<Page<TbAddress>> getAddressPageList(TbAddress tbAddress, Integer size, Integer current, HttpServletRequest request);
+    R<List<TbAddress>> getAddressPageList(TbAddress tbAddress, HttpServletRequest request);
 
     R<TbAddress> getAddressInfo(String addressId, HttpServletRequest request);
 

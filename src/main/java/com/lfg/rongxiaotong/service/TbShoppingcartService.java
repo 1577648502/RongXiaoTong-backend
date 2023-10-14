@@ -6,6 +6,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.lfg.rongxiaotong.utius.R;
 
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
 * @author liufaguang
@@ -13,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 * @createDate 2023-10-13 16:34:21
 */
 public interface TbShoppingcartService extends IService<TbShoppingcart> {
-    R<Page<TbShoppingcart>> getShoppingcartPageList(TbShoppingcart tbShoppingcart, Integer size, Integer current, HttpServletRequest request);
+    R<List<TbShoppingcart>> getShoppingcartPageList(TbShoppingcart tbShoppingcart, HttpServletRequest request);
 
     R<TbShoppingcart> getShoppingcartInfo(String tbShoppingcartId, HttpServletRequest request);
 
@@ -21,6 +24,6 @@ public interface TbShoppingcartService extends IService<TbShoppingcart> {
 
     R<String> addShoppingcart(TbShoppingcart tbShoppingcart, HttpServletRequest request);
 
-    R<String> deleteShoppingcart(String tbShoppingcartId, HttpServletRequest request);
+    R<String> deleteShoppingcart(ArrayList<String> tbShoppingcartId, HttpServletRequest request);
 
 }

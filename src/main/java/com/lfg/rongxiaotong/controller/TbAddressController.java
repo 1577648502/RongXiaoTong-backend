@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequestMapping("/address")
@@ -19,8 +20,8 @@ public class TbAddressController {
     private TbAddressService tbAddressService;
 
     @RequestMapping("/getAddressPageList")
-    private R<Page<TbAddress>> getAddressPageList(@RequestBody TbAddress tbAddress, Integer size, Integer current, HttpServletRequest request) {
-        return tbAddressService.getAddressPageList(tbAddress, size, current, request);
+    private R<List<TbAddress>> getAddressPageList(@RequestBody TbAddress tbAddress, HttpServletRequest request) {
+        return tbAddressService.getAddressPageList(tbAddress, request);
     }
 
     @RequestMapping("/getAddressInfo")

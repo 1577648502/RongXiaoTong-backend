@@ -13,6 +13,7 @@ import com.lfg.rongxiaotong.utius.R;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
 * @author liufaguang
@@ -23,17 +24,13 @@ import javax.servlet.http.HttpServletRequest;
 public class TbAddressServiceImpl extends ServiceImpl<TbAddressMapper, TbAddress>
     implements TbAddressService{
     @Override
-    public R<Page<TbAddress>> getAddressPageList(TbAddress tbAddress, Integer size, Integer current, HttpServletRequest request) {
+    public R<List<TbAddress>> getAddressPageList(TbAddress tbAddress, HttpServletRequest request) {
         String admin = IsAdmin.isAdmin(request);
         if (!admin.equals("未登录")) {
-            if (null == size || null == current) {
-                return R.error("参数错误");
-            }
-            Page<TbAddress> page = new Page<>(current, size);
             LambdaQueryWrapper<TbAddress> wrapper = new LambdaQueryWrapper<>();
             wrapper.eq(null != tbAddress.getOwnName(), TbAddress::getOwnName, tbAddress.getOwnName());
             wrapper.eq(null != tbAddress.getIsDefault(), TbAddress::getIsDefault, tbAddress.getIsDefault());
-            Page<TbAddress> tbAddressPage = this.page(page, wrapper);
+            List<TbAddress> tbAddressPage = this.list(wrapper);
             return R.success(tbAddressPage);
         }
         return  R.error("未登录");

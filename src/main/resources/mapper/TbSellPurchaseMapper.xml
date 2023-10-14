@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lfg.rongxiaotong.mapper.TbSellPurchaseMapper">
+
+    <resultMap id="BaseResultMap" type="com.lfg.rongxiaotong.domain.TbSellPurchase">
+            <id property="sellPurchaseId" column="sell_purchase_id" jdbcType="INTEGER"/>
+            <result property="purchaseId" column="purchase_id" jdbcType="INTEGER"/>
+            <result property="ownName" column="own_name" jdbcType="VARCHAR"/>
+            <result property="purchaseType" column="purchase_type" jdbcType="INTEGER"/>
+            <result property="uninPricee" column="unin_pricee" jdbcType="DECIMAL"/>
+            <result property="sumPrice" column="sum_price" jdbcType="DECIMAL"/>
+            <result property="address" column="address" jdbcType="VARCHAR"/>
+            <result property="purchaseStatus" column="purchase_status" jdbcType="INTEGER"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="orderId" column="order_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        sell_purchase_id,purchase_id,own_name,
+        purchase_type,unin_pricee,sum_price,
+        address,purchase_status,create_time,
+        update_time,order_id
+    </sql>
+</mapper>

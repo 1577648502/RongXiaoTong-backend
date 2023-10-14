@@ -11,14 +11,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequestMapping("/shoppingCart")
 public class TbShoppingCartController {
     @Resource
     private TbShoppingcartService tbShoppingCartService;
     @RequestMapping("/getShoppingCartPageList")
-    private R<Page<TbShoppingcart>> getShoppingCartPageList(@RequestBody TbShoppingcart tbShoppingCart, Integer size, Integer current, HttpServletRequest request){
-        return tbShoppingCartService.getShoppingcartPageList(tbShoppingCart, size, current,request);
+    private R<List<TbShoppingcart>> getShoppingCartPageList(@RequestBody TbShoppingcart tbShoppingCart, HttpServletRequest request){
+        return tbShoppingCartService.getShoppingcartPageList(tbShoppingCart,request);
     }
     @RequestMapping("/getShoppingCartInfo")
     private R<TbShoppingcart>  getShoppingCartInfo(@RequestParam String shoppingCartId, HttpServletRequest request){
@@ -42,10 +46,10 @@ public class TbShoppingCartController {
         return tbShoppingCartService.addShoppingcart(tbShoppingCart,request);
     }
     @RequestMapping("deleteShoppingCart")
-    private R<String>  deleteShoppingCart(@RequestParam String shoppingCartId,HttpServletRequest request) {
-        if (shoppingCartId == null || shoppingCartId.isEmpty()){
+    private R<String>  deleteShoppingCart(@RequestBody ArrayList<String> shoppingCartIds, HttpServletRequest request) {
+        if (shoppingCartIds == null){
             return R.error("农业知识id不能为空");
         }
-        return tbShoppingCartService.deleteShoppingcart(shoppingCartId,request);
+        return tbShoppingCartService.deleteShoppingcart(shoppingCartIds,request);
     }
 }
