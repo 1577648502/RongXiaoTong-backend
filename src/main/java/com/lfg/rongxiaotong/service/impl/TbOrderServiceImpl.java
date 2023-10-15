@@ -29,7 +29,6 @@ public class TbOrderServiceImpl extends ServiceImpl<TbOrderMapper, TbOrder>
     public R<Page<TbOrder>> getOrderPageList(TbOrder tbOrder, Integer size, Integer current, HttpServletRequest request) {
         String admin = IsAdmin.isAdmin(request);
         if (!admin.equals("未登录")) {
-            if (admin.equals("admin")) {
                 if (null == size || null == current) {
                     return R.error("参数错误");
                 }
@@ -38,9 +37,7 @@ public class TbOrderServiceImpl extends ServiceImpl<TbOrderMapper, TbOrder>
                 wrapper.like(null != tbOrder.getOwnName(), TbOrder::getOwnName, tbOrder.getOwnName());
                 Page<TbOrder> tbOrderPage = this.page(page, wrapper);
                 return R.success(tbOrderPage);
-            } else {
-                return R.error("用户非管理员");
-            }
+
         }
         return R.error("未登录");
 
@@ -50,14 +47,11 @@ public class TbOrderServiceImpl extends ServiceImpl<TbOrderMapper, TbOrder>
     public R<TbOrder> getOrderInfo(String orderId, HttpServletRequest request) {
         String admin = IsAdmin.isAdmin(request);
         if (!admin.equals("未登录")) {
-            if (admin.equals("admin")) {
+
                 if (null == orderId) {
                     return R.error("参数错误");
                 }
                 return R.success(this.getById(orderId));
-            } else {
-                return R.error("用户非管理员");
-            }
         }
         return R.error("未登录");
     }

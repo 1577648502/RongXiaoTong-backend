@@ -77,6 +77,10 @@ public class TbAddressServiceImpl extends ServiceImpl<TbAddressMapper, TbAddress
             queryWrapper.eq(TbAddress::getId,defaultAddress);
             boolean saved = this.update(tbAddress,queryWrapper);
             if (saved) {
+                //如果newAddress为空，则设置为默认地址
+                if (newAddress.isEmpty()){
+                    return R.success("更新成功");
+                }
                 TbAddress newTbAddress = new TbAddress();
                 newTbAddress.setIsDefault(1);
                 LambdaQueryWrapper<TbAddress> wrapper = new LambdaQueryWrapper<>();
@@ -99,6 +103,7 @@ public class TbAddressServiceImpl extends ServiceImpl<TbAddressMapper, TbAddress
             if (null == tbAddress ) {
                 return R.error("参数错误");
             }
+            tbAddress.setOwnName(user.getUserName());
             boolean saved = this.save(tbAddress);
             if (saved) {
                 return R.success("添加成功");

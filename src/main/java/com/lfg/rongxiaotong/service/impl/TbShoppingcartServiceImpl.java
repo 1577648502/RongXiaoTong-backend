@@ -77,8 +77,10 @@ public class TbShoppingcartServiceImpl extends ServiceImpl<TbShoppingcartMapper,
             if (null == tbShoppingcart) {
                 return R.error("参数错误");
             }
+            //订单id和登录用户名一致判断为商品已存在，数量+1
             LambdaQueryWrapper<TbShoppingcart> queryWrapper = new LambdaQueryWrapper<>();
             queryWrapper.eq(TbShoppingcart::getOrderId, tbShoppingcart.getOrderId());
+            queryWrapper.eq(TbShoppingcart::getOwnName, tbShoppingcart.getOwnName());
             TbShoppingcart shoppingCart = this.getOne(queryWrapper);
             if (null != shoppingCart) {
                 Integer count = shoppingCart.getCount();
