@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -47,10 +48,9 @@ public class UserController {
     public R<String> modifyUser(@RequestBody User user, HttpServletRequest request) {
         return userService.modifyUser(user,request);
     }
-    @RequestMapping("/delUser/{id}")
-    public R<String> delUser(@PathVariable long id, HttpServletRequest request) {
-        System.out.println(id);
-        return userService.deleteUser(id,request);
+    @RequestMapping("/delUser/")
+    public R<String> delUser(@RequestBody List<Long> ids, HttpServletRequest request) {
+        return userService.deleteUser(ids,request);
     }
 
 }

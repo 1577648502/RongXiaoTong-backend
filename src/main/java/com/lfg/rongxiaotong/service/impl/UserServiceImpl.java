@@ -16,6 +16,7 @@ import org.springframework.util.DigestUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author liufaguang
@@ -54,7 +55,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             User byId = this.getById(data.getId());
             if (byId == null) {
                 return R.error("用户未登录");
-            }else {
+            } else {
                 return R.success(byId);
             }
         } else {
@@ -154,36 +155,32 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
-    public R<String> deleteUser(long id, HttpServletRequest request) {
-        if (id == 0) {
+    public R<String> deleteUser(List<Long> ids, HttpServletRequest request) {
+        if (ids.isEmpty()) {
             return R.error("id不能为空");
         }
         String admin = IsAdmin.isAdmin(request);
         if (!admin.equals("未登录")) {
             User data = (User) request.getSession().getAttribute("data");
-            if (data.getId() == id) {
+            if (ids.contains(data.getId()))
                 return R.error("不能删除自己");
-            }
-            if (admin.equals("admin")) {
-                LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
-                wrapper.eq(User::getId, id);
-                User byId = this.getOne(wrapper);
-                if (byId != null) {
-                    boolean update = this.removeById(id);
-                    if (update) {
-                        return R.success("删除成功");
-                    } else {
-                        return R.error("删除失败");
-                    }
-                } else {
-                    return R.error("用户不存在");
-                }
+
+
+        if (admin.equals("admin")) {
+            boolean update = this.removeByIds(ids);
+            if (update) {
+                return R.success("删除成功");
             } else {
-                return R.error("用户非管理员");
+                return R.error("删除失败");
             }
+        } else {
+            return R.error("用户非管理员");
+        }
+
         }
         return R.error("用户未登录");
     }
+
 
     @Override
     public R<String> modifyUser(User user, HttpServletRequest request) {

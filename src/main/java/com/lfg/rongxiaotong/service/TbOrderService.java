@@ -8,6 +8,7 @@ import com.lfg.rongxiaotong.utius.R;
 import org.springframework.core.annotation.Order;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 
 /**
@@ -24,5 +25,5 @@ public interface TbOrderService extends IService<TbOrder> {
 
     R<String> addOrder(TbOrder tbOrder, HttpServletRequest request);
 
-    R<String> deleteOrder(String orderId, HttpServletRequest request);
+    R<String> deleteOrder(List<Long> orderIds, HttpServletRequest request);
 }

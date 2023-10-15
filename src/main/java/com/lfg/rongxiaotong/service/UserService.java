@@ -7,6 +7,7 @@ import com.lfg.rongxiaotong.utius.R;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
 * @author liufaguang
@@ -70,10 +71,10 @@ public interface UserService extends IService<User> {
 
     /**
      * 删除用户
-     * @param id
+     * @param ids
      * @return
      */
-    R<String> deleteUser(long id, HttpServletRequest  request);
+    R<String> deleteUser(List<Long> ids, HttpServletRequest  request);
 
     R<String> modifyUser(User user, HttpServletRequest request);
 }

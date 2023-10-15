@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RequestMapping("/order")
 @RestController
@@ -44,10 +45,10 @@ public class OrderController {
         return tbOrderService.addOrder(tbOrder,request);
     }
     @RequestMapping("deleteOrder")
-    private R<String>  deleteOrder(@RequestParam String orderId,HttpServletRequest request) {
-        if (orderId == null || "".equals(orderId)){
+    private R<String>  deleteOrder(@RequestBody List<Long> orderIds, HttpServletRequest request) {
+        if (orderIds == null || orderIds.size() == 0){
             return R.error("订单id不能为空");
         }
-        return tbOrderService.deleteOrder(orderId,request);
+        return tbOrderService.deleteOrder(orderIds,request);
     }
 }

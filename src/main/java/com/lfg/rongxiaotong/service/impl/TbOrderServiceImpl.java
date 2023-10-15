@@ -14,18 +14,19 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.List;
 
 /**
-* @author liufaguang
-* @description 针对表【tb_order】的数据库操作Service实现
-* @createDate 2023-10-07 15:02:43
-*/
+ * @author liufaguang
+ * @description 针对表【tb_order】的数据库操作Service实现
+ * @createDate 2023-10-07 15:02:43
+ */
 @Service
 public class TbOrderServiceImpl extends ServiceImpl<TbOrderMapper, TbOrder>
-    implements TbOrderService {
+        implements TbOrderService {
 
     @Override
-    public R<Page<TbOrder>> getOrderPageList(TbOrder tbOrder, Integer size, Integer current,HttpServletRequest request) {
+    public R<Page<TbOrder>> getOrderPageList(TbOrder tbOrder, Integer size, Integer current, HttpServletRequest request) {
         String admin = IsAdmin.isAdmin(request);
         if (!admin.equals("未登录")) {
             if (null == size || null == current) {
@@ -37,7 +38,7 @@ public class TbOrderServiceImpl extends ServiceImpl<TbOrderMapper, TbOrder>
             Page<TbOrder> tbOrderPage = this.page(page, wrapper);
             return R.success(tbOrderPage);
         }
-        return  R.error("未登录");
+        return R.error("未登录");
 
     }
 
@@ -51,14 +52,14 @@ public class TbOrderServiceImpl extends ServiceImpl<TbOrderMapper, TbOrder>
             }
             return R.success(this.getById(orderId));
         }
-        return  R.error("未登录");
+        return R.error("未登录");
     }
 
     @Override
     public R<String> updateOrder(TbOrder tbOrder, HttpServletRequest request) {
         String admin = IsAdmin.isAdmin(request);
         if (!admin.equals("未登录")) {
-            if (null == tbOrder ) {
+            if (null == tbOrder) {
                 return R.error("参数错误");
             }
             boolean saved = this.updateById(tbOrder);
@@ -66,15 +67,15 @@ public class TbOrderServiceImpl extends ServiceImpl<TbOrderMapper, TbOrder>
                 return R.success("更新成功");
             }
         }
-        return  R.error("未登录");
+        return R.error("未登录");
     }
 
     @Override
     public R<String> addOrder(TbOrder tbOrder, HttpServletRequest request) {
-        User user = (User)request.getSession().getAttribute("data");
+        User user = (User) request.getSession().getAttribute("data");
         String admin = IsAdmin.isAdmin(request);
         if (!admin.equals("未登录")) {
-            if (null == tbOrder ) {
+            if (null == tbOrder) {
                 return R.error("参数错误");
             }
             tbOrder.setOwnName(user.getUserName());
@@ -86,25 +87,29 @@ public class TbOrderServiceImpl extends ServiceImpl<TbOrderMapper, TbOrder>
                 return R.success("添加成功");
             }
         }
-        return  R.error("未登录");
+        return R.error("未登录");
     }
 
     @Override
-    public R<String> deleteOrder(String orderId, HttpServletRequest request) {
+    public R<String> deleteOrder(List<Long> orderIds, HttpServletRequest request) {
+        if (orderIds.isEmpty()) {
+            return R.error("id不能为空");
+        }
         String admin = IsAdmin.isAdmin(request);
         if (!admin.equals("未登录")) {
-            if (null == orderId || orderId.isEmpty()) {
-                return R.error("参数错误");
-            }
-            boolean saved = this.removeById(orderId);
-            if (saved) {
-                return R.success("删除成功");
+            if (admin.equals("admin")) {
+                boolean update = this.removeByIds(orderIds);
+                if (update) {
+                    return R.success("删除成功");
+                } else {
+                    return R.error("删除失败");
+                }
+            } else {
+                return R.error("用户非管理员");
             }
         }
-        return  R.error("未登录");
+        return R.error("用户未登录");
     }
+
+
 }
-
-
-
-
