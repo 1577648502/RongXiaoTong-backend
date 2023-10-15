@@ -29,28 +29,35 @@ public class TbOrderServiceImpl extends ServiceImpl<TbOrderMapper, TbOrder>
     public R<Page<TbOrder>> getOrderPageList(TbOrder tbOrder, Integer size, Integer current, HttpServletRequest request) {
         String admin = IsAdmin.isAdmin(request);
         if (!admin.equals("未登录")) {
-            if (null == size || null == current) {
-                return R.error("参数错误");
+            if (admin.equals("admin")) {
+                if (null == size || null == current) {
+                    return R.error("参数错误");
+                }
+                Page<TbOrder> page = new Page<>(current, size);
+                LambdaQueryWrapper<TbOrder> wrapper = new LambdaQueryWrapper<>();
+                wrapper.like(null != tbOrder.getOwnName(), TbOrder::getOwnName, tbOrder.getOwnName());
+                Page<TbOrder> tbOrderPage = this.page(page, wrapper);
+                return R.success(tbOrderPage);
+            } else {
+                return R.error("用户非管理员");
             }
-            Page<TbOrder> page = new Page<>(current, size);
-            LambdaQueryWrapper<TbOrder> wrapper = new LambdaQueryWrapper<>();
-            wrapper.like(null != tbOrder.getOwnName(), TbOrder::getOwnName, tbOrder.getOwnName());
-            Page<TbOrder> tbOrderPage = this.page(page, wrapper);
-            return R.success(tbOrderPage);
         }
         return R.error("未登录");
 
     }
 
-
     @Override
     public R<TbOrder> getOrderInfo(String orderId, HttpServletRequest request) {
         String admin = IsAdmin.isAdmin(request);
         if (!admin.equals("未登录")) {
-            if (null == orderId) {
-                return R.error("参数错误");
+            if (admin.equals("admin")) {
+                if (null == orderId) {
+                    return R.error("参数错误");
+                }
+                return R.success(this.getById(orderId));
+            } else {
+                return R.error("用户非管理员");
             }
-            return R.success(this.getById(orderId));
         }
         return R.error("未登录");
     }
@@ -59,12 +66,16 @@ public class TbOrderServiceImpl extends ServiceImpl<TbOrderMapper, TbOrder>
     public R<String> updateOrder(TbOrder tbOrder, HttpServletRequest request) {
         String admin = IsAdmin.isAdmin(request);
         if (!admin.equals("未登录")) {
-            if (null == tbOrder) {
-                return R.error("参数错误");
-            }
-            boolean saved = this.updateById(tbOrder);
-            if (saved) {
-                return R.success("更新成功");
+            if (admin.equals("admin")) {
+                if (null == tbOrder) {
+                    return R.error("参数错误");
+                }
+                boolean saved = this.updateById(tbOrder);
+                if (saved) {
+                    return R.success("更新成功");
+                }
+            } else {
+                return R.error("用户非管理员");
             }
         }
         return R.error("未登录");
@@ -75,17 +86,20 @@ public class TbOrderServiceImpl extends ServiceImpl<TbOrderMapper, TbOrder>
         User user = (User) request.getSession().getAttribute("data");
         String admin = IsAdmin.isAdmin(request);
         if (!admin.equals("未登录")) {
-            if (null == tbOrder) {
-                return R.error("参数错误");
+            if (admin.equals("admin")) {
+                if (null == tbOrder) {
+                    return R.error("参数错误");
+                }
+                tbOrder.setOwnName(user.getUserName());
+                tbOrder.setCreateTime(new Date());
+                tbOrder.setUpdateTime(new Date());
+                tbOrder.setIsDelete(0);
+                boolean saved = this.save(tbOrder);
+                if (saved) {
+                    return R.success("添加成功");
+                }
             }
-            tbOrder.setOwnName(user.getUserName());
-            tbOrder.setCreateTime(new Date());
-            tbOrder.setUpdateTime(new Date());
-            tbOrder.setIsDelete(0);
-            boolean saved = this.save(tbOrder);
-            if (saved) {
-                return R.success("添加成功");
-            }
+            return R.error("用户非管理员");
         }
         return R.error("未登录");
     }
