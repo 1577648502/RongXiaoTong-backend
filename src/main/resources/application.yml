@@ -6,13 +6,13 @@ spring:
       max-file-size: 10MB
       max-request-size: 100MB
   datasource:
-    url: jdbc:mysql://localhost:3306/rongxiaotong?useUnicode=true&characterEncoding=utf-8&use
-#    url: jdbc:mysql://rongxiaotong.cewkjb4qqsj3.ap-east-1.rds.amazonaws.com/rongxiaotong?useUnicode=true&characterEncoding=utf-8&use
-#    url: jdbc:mysql://114.132.232.133:3306/qr_db
-#    url: jdbc:mysql://20.187.89.187:3306/qr_db
-#    username: qr_db
-    username: root
-    password: 12345678
+    #    url: jdbc:mysql://localhost:3306/rongxiaotong?useUnicode=true&characterEncoding=utf-8&use
+    url: jdbc:mysql://rongxiaotong.cewkjb4qqsj3.ap-east-1.rds.amazonaws.com/rongxiaotong?useUnicode=true&characterEncoding=utf-8&use
+    #    url: jdbc:mysql://114.132.232.133:3306/qr_db
+    #    url: jdbc:mysql://20.187.89.187:3306/qr_db
+    #    username: qr_db
+    username: admin
+    password: lfg.1314
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
 server:
@@ -38,10 +38,10 @@ mybatis-plus:
       logic-delete-value: 1 # 逻辑已删除值（默认为 1）
       logic-not-delete-value: 0 # 逻辑未删除值（默认为 0）
 
-
-rongxiaotong:
-  upload-path: /Users/liufaguang/Downloads/img/
-
-SavePath:
-  ProfilePhoto: '/Users/liufaguang/Downloads/img/'  #图标存储路径
-  ProfilePhotoMapper: '/profilePhoto/'  #图标的映射路径
+minio:
+  host: https://minio.xiaoliu.lol/
+#  host: http://127.0.0.1:9000
+  url: ${minio.host}/${minio.bucket}/
+  access-key: minioadmin
+  secret-key: minioadmin
+  bucket: public

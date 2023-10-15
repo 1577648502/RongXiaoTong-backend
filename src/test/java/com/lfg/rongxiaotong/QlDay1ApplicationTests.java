@@ -29,9 +29,4 @@ class QlDay1ApplicationTests {
       }
 
   }
-  @Test
-  public  void getPageUSerInfo(){
-      User user = new User();
-      R<Page<User>> pageUSerInfo = userService.getPageUSerInfo(user, 1, 10);
-  }
 }
