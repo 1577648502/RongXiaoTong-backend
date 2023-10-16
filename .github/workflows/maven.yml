@@ -47,5 +47,5 @@ jobs:
         password: ${{ secrets.SERVER_SSH_PASS }}
         command_timeout: 20s
         script:
-          ps -ef | grep rongxiaotong-backend-0.0.1-SNAPSHOT.jar | grep -v grep | awk '{print $2}' | xargs kill -9 
+          kill -9 $(lsof -t -i :8080)
           /usr/local/btjdk/jdk8/bin/java -jar -Xmx1024M -Xms256M  /www/wwwroot/target/rongxiaotong-backend-0.0.1-SNAPSHOT.jar --server.port=8080
