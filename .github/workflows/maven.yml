@@ -34,7 +34,7 @@ jobs:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         port: ${{ secrets.PORT }}
-        password: ${{ secrets.PASSWORD }}
+        key: ${{ secrets.KEY }}
         source: "target/rongxiaotong-backend-0.0.1-SNAPSHOT.jar"
         rm: true
         target: "/www/wwwroot"
