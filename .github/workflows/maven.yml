@@ -27,7 +27,7 @@ jobs:
         distribution: "adopt"
         cache: maven
     - name: Build with Maven
-      run: mvn clean -DfinalName=RongXiaoTong package --file pom.xml
+      run: mvn clean package --file pom.xml
     - name: copy file
       uses: appleboy/scp-action@master
       with:
@@ -35,7 +35,7 @@ jobs:
         username: ${{ secrets.USERNAME }}
         port: ${{ secrets.PORT }}
         password: ${{ secrets.PASSWORD }}
-        source: "target/RongXiaoTong.jar"
+        source: "target/rongxiaotong-backend-0.0.1-SNAPSHOT.jar"
         rm: true
         target: "/www/wwwroot"
 
