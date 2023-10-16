@@ -50,6 +50,6 @@ jobs:
         script:  |
           cd /www/wwwroot/target/target
           ps -ef | grep rongxiaotong-backend-0.0.1-SNAPSHOT.jar | grep -v grep | awk '{print $2}' | xargs kill -9
-          nohup /usr/local/btjdk/jdk8/bin/java -jar -Xmx1024M -Xms256M  /www/wwwroot/target/target/rongxiaotong-backend-0.0.1-SNAPSHOT.jar --server.port=8080 > nohup.out &
+          nohup timeout 5m /usr/local/btjdk/jdk8/bin/java -jar -Xmx1024M -Xms256M  /www/wwwroot/target/target/rongxiaotong-backend-0.0.1-SNAPSHOT.jar --server.port=8080 > nohup.out &
           pwd
           exit
