@@ -49,7 +49,7 @@ jobs:
         command_timeout: 20s
         script:  |
           cd /www/wwwroot/target/target
-          pgrep -f rongxiaotong-backend-0.0.1-SNAPSHOT.jar | xargs -r kill -9
+          pgrep -f rongxiaotong-backend-0.0.1-SNAPSHOT.jar | xargs -r kill -9 | exit 0
           nohup /usr/local/btjdk/jdk8/bin/java -jar /www/wwwroot/target/target/rongxiaotong-backend-0.0.1-SNAPSHOT.jar --server.port=8080 >/dev/null 2>&1 &
           pwd
           exit
