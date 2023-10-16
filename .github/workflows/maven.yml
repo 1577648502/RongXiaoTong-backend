@@ -49,11 +49,7 @@ jobs:
         command_timeout: 20s
         script:  |
           cd /www/wwwroot/target/target
-          if pgrep -f rongxiaotong-backend-0.0.1-SNAPSHOT.jar > /dev/null; then
-          pgrep -f rongxiaotong-backend-0.0.1-SNAPSHOT.jar | xargs -r kill -9
-          else
-          echo "Process not found, no need to kill."
-          fi
-          nohup /usr/local/btjdk/jdk8/bin/java -jar /www/wwwroot/target/target/rongxiaotong-backend-0.0.1-SNAPSHOT.jar --server.port=8080 >/dev/null 2>&1 &
+          ps -ef | grep rongxiaotong-backend-0.0.1-SNAPSHOT.jar | grep -v grep | awk '{print $2}' | xargs kill -9
+          nohup /usr/local/btjdk/jdk8/bin/java -jar -Xmx1024M -Xms256M  /www/wwwroot/target/target/rongxiaotong-backend-0.0.1-SNAPSHOT.jar --server.port=8080 > nohup.out &
           pwd
           exit
