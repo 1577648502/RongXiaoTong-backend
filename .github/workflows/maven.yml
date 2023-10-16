@@ -38,4 +38,6 @@ jobs:
         source: "target/rongxiaotong-backend-0.0.1-SNAPSHOT.jar"
         rm: true
         target: "/www/wwwroot"
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.KEY }}
 
