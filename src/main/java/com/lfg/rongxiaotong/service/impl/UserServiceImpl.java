@@ -73,6 +73,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             user.setPassword(DigestUtils.md5DigestAsHex(user.getPassword().getBytes()));
             user.setCreateTime(new Date());
             user.setRole("user");
+            user.setType(1);
             boolean insert = this.save(user);
             if (insert) {
                 return R.success("注册成功");
@@ -92,12 +93,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         String admin = IsAdmin.isAdmin(request);
         if (!admin.equals("未登录")) {
             if (admin.equals("admin")) {
+                if (user.getId() == null||user.getUserName().isEmpty()||user.getRole().isEmpty()||user.getType()==null){
+                    return R.error("参数错误");
+                }
                 LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
                 wrapper.eq(User::getId, user.getId());
                 User byId = this.getOne(wrapper);
-                System.out.println(user);
-                System.out.println(byId);
-
                 if (byId != null) {
                     User newUser = getUser(user);
                     newUser.setUpdateTime(new Date());

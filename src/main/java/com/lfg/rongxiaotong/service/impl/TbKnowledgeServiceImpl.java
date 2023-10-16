@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.List;
 
 /**
 * @author liufaguang
@@ -34,6 +35,8 @@ public class TbKnowledgeServiceImpl extends ServiceImpl<TbKnowledgeMapper, TbKno
             Page<TbKnowledge> page = new Page<>(current, size);
             LambdaQueryWrapper<TbKnowledge> wrapper = new LambdaQueryWrapper<>();
             wrapper.like(null != tbKnowledge.getOwnName(), TbKnowledge::getOwnName, tbKnowledge.getOwnName());
+            wrapper.like(null != tbKnowledge.getTitle(), TbKnowledge::getTitle, tbKnowledge.getTitle());
+            wrapper.like(null != tbKnowledge.getContent(), TbKnowledge::getContent, tbKnowledge.getContent());
             Page<TbKnowledge> tbKnowledgePage = this.page(page, wrapper);
             return R.success(tbKnowledgePage);
         }
@@ -58,13 +61,20 @@ public class TbKnowledgeServiceImpl extends ServiceImpl<TbKnowledgeMapper, TbKno
     public R<String> updateKnowledge(TbKnowledge tbKnowledge, HttpServletRequest request) {
         String admin = IsAdmin.isAdmin(request);
         if (!admin.equals("未登录")) {
-            if (null == tbKnowledge ) {
-                return R.error("参数错误");
+            if (admin.equals("admin")) {
+
+                if (null == tbKnowledge ) {
+                    return R.error("参数错误");
+                }
+                boolean saved = this.updateById(tbKnowledge);
+                if (saved) {
+                    return R.success("更新成功");
+                }
+            } else {
+                return R.error("用户非管理员");
             }
-            boolean saved = this.updateById(tbKnowledge);
-            if (saved) {
-                return R.success("更新成功");
-            }
+
+
         }
         return  R.error("未登录");
     }
@@ -74,31 +84,43 @@ public class TbKnowledgeServiceImpl extends ServiceImpl<TbKnowledgeMapper, TbKno
         User user = (User)request.getSession().getAttribute("data");
         String admin = IsAdmin.isAdmin(request);
         if (!admin.equals("未登录")) {
-            if (null == tbKnowledge ) {
-                return R.error("参数错误");
-            }
-            tbKnowledge.setOwnName(user.getUserName());
-            tbKnowledge.setCreateTime(new Date());
-            tbKnowledge.setUpdateTime(new Date());
-            boolean saved = this.save(tbKnowledge);
-            if (saved) {
-                return R.success("添加成功");
+            if (admin.equals("admin")) {
+                if (null == tbKnowledge ) {
+                    return R.error("参数错误");
+                }
+                tbKnowledge.setOwnName(user.getUserName());
+                tbKnowledge.setCreateTime(new Date());
+                tbKnowledge.setUpdateTime(new Date());
+                boolean saved = this.save(tbKnowledge);
+                if (saved) {
+                    return R.success("添加成功");
+                }
+            } else {
+                return R.error("用户非管理员");
             }
         }
         return  R.error("未登录");
     }
 
     @Override
-    public R<String> deleteKnowledge(String knowledgeId, HttpServletRequest request) {
+    public R<String> deleteKnowledge(List<String> knowledgeId, HttpServletRequest request) {
         String admin = IsAdmin.isAdmin(request);
         if (!admin.equals("未登录")) {
-            if (null == knowledgeId || knowledgeId.isEmpty()) {
-                return R.error("参数错误");
+
+            if (admin.equals("admin")) {
+
+                if (null == knowledgeId || knowledgeId.isEmpty()) {
+                    return R.error("参数错误");
+                }
+                boolean saved = this.removeByIds(knowledgeId);
+                if (saved) {
+                    return R.success("删除成功");
+                }
+            } else {
+                return R.error("用户非管理员");
             }
-            boolean saved = this.removeById(knowledgeId);
-            if (saved) {
-                return R.success("删除成功");
-            }
+
+
         }
         return  R.error("未登录");
     }

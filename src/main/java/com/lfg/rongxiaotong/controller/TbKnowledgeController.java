@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequestMapping("/knowledge")
@@ -43,10 +44,10 @@ public class TbKnowledgeController {
         return tbKnowledgeService.addKnowledge(tbKnowledge,request);
     }
     @RequestMapping("deleteKnowledge")
-    private R<String>  deleteKnowledge(@RequestParam String knowledgeId,HttpServletRequest request) {
-        if (knowledgeId == null || knowledgeId.isEmpty()){
+    private R<String>  deleteKnowledge(@RequestBody List<String> knowledgeIds, HttpServletRequest request) {
+        if (knowledgeIds == null || knowledgeIds.isEmpty()){
             return R.error("农业知识id不能为空");
         }
-        return tbKnowledgeService.deleteKnowledge(knowledgeId,request);
+        return tbKnowledgeService.deleteKnowledge(knowledgeIds,request);
     }
 }

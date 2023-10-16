@@ -6,15 +6,15 @@ spring:
       max-file-size: 10MB
       max-request-size: 100MB
   datasource:
-    url: jdbc:mysql://localhost:3306/rongxiaotong?useUnicode=true&characterEncoding=utf-8&use
-    #    url: jdbc:mysql://rongxiaotong.cewkjb4qqsj3.ap-east-1.rds.amazonaws.com/rongxiaotong?useUnicode=true&characterEncoding=utf-8&use
+    #    url: jdbc:mysql://localhost:3306/rongxiaotong?useUnicode=true&characterEncoding=utf-8&use
+    url: jdbc:mysql://rongxiaotong.cewkjb4qqsj3.ap-east-1.rds.amazonaws.com/rongxiaotong?useUnicode=true&characterEncoding=utf-8&use
     #    url: jdbc:mysql://114.132.232.133:3306/qr_db
     #    url: jdbc:mysql://20.187.89.187:3306/qr_db
     #    username: qr_db
-    #    username: admin
-    username: root
-    password: 12345678
-    #    password: lfg.1314
+    username: admin
+    #    username: root
+    #    password: 12345678
+    password: lfg.1314
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
 server:

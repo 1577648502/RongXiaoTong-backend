@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.lfg.rongxiaotong.utius.R;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
 * @author liufaguang
@@ -22,5 +23,5 @@ public interface TbKnowledgeService extends IService<TbKnowledge> {
 
     R<String> addKnowledge(TbKnowledge tbKnowledge, HttpServletRequest request);
 
-    R<String> deleteKnowledge(String knowledgeId, HttpServletRequest request);
+    R<String> deleteKnowledge(List<String> knowledgeIds, HttpServletRequest request);
 }
