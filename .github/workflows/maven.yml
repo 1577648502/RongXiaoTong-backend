@@ -37,5 +37,5 @@ jobs:
         password: ${{ secrets.SERVER_SSH_PASS }}
         source: "target/rongxiaotong-backend-0.0.1-SNAPSHOT.jar"
         rm: true
-        target: "/www/wwwroot"
+        target: "/www/wwwroot/rongxiaotong-backend-0.0.1-SNAPSHOT.jar"
 
