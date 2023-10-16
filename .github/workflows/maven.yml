@@ -46,10 +46,10 @@ jobs:
         username: ${{ secrets.SERVER_SSH_USER }}
         key: ${{ secrets.SERVER_SSH_KEY }}
         password: ${{ secrets.SERVER_SSH_PASS }}
-        command_timeout: 60s
+        command_timeout: 120s
         script:  |
           cd /www/wwwroot/target/target
           ps -ef | grep rongxiaotong-backend-0.0.1-SNAPSHOT.jar | grep -v grep | awk '{print $2}' | xargs kill -9
-          nohup /usr/local/btjdk/jdk8/bin/java -jar -Xmx1024M -Xms256M  /www/wwwroot/target/target/rongxiaotong-backend-0.0.1-SNAPSHOT.jar --server.port=8080 --spring.profiles.active=formal  > log.out &
+          nohup /usr/local/btjdk/jdk8/bin/java -jar -Xmx1024M -Xms256M  /www/wwwroot/target/target/rongxiaotong-backend-0.0.1-SNAPSHOT.jar --server.port=8080 &
           pwd
           exit
