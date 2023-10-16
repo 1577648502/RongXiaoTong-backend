@@ -38,6 +38,17 @@ jobs:
         source: "target/rongxiaotong-backend-0.0.1-SNAPSHOT.jar"
         rm: true
         target: "/www/wwwroot"
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.KEY }}
-
+    - name: Deploy
+      uses: appleboy/ssh-action@master
+      with:
+                  host: ${{ secrets.HOST }}
+                  username: ${{ secrets.USERNAME }}
+                  key: ${{ secrets.KEY }}
+                  port: ${{ secrets.PORT }}
+                  command_timeout: 20s
+                  script: | 
+                    cd /www/lane/formal/target
+                    ps -ef | grep lane-formal.jar | grep -v grep | awk '{print $2}' | xargs kill -9 
+                    nohup java -jar lane-formal.jar --spring.profiles.active=formal > nohup.out &
+                    pwd
+                    exit
