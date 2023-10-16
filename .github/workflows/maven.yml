@@ -28,5 +28,15 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
+    - run: mvn clean -DfinalName=RongXiaoTong package --file pom.xml
+    - name: copy file
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        port: ${{ secrets.PORT }}
+        password: ${{ secrets.PASSWORD }}
+        source: "target/RongXiaoTong.jar"
+        rm: true
+        target: "/www/wwwroot"
 
