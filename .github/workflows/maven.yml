@@ -50,6 +50,6 @@ jobs:
         script:  |
           cd /www/wwwroot/target/target
           ps -ef | grep rongxiaotong-backend-0.0.1-SNAPSHOT.jar | grep -v grep | awk '{print $2}' | xargs kill -9
-          nohup /usr/local/btjdk/jdk8/bin/java -jar -Xmx1024M -Xms256M  rongxiaotong-backend-0.0.1-SNAPSHOT.jar --spring.profiles.active=formal > nohup.out &
+          nohup /usr/local/btjdk/jdk8/bin/java -jar  rongxiaotong-backend-0.0.1-SNAPSHOT.jar --spring.profiles.active=formal > nohup.out &
           pwd
           exit
