@@ -35,13 +35,12 @@ jobs:
         username: ${{ secrets.SERVER_SSH_USER }}
         key: ${{ secrets.SERVER_SSH_KEY }}
         password: ${{ secrets.SERVER_SSH_PASS }}
+        command_timeout: 10m
         source: "target/rongxiaotong-backend-0.0.1-SNAPSHOT.jar"
         rm: true
         target: "/www/wwwroot/target"
     - name: Deploy
       uses: appleboy/ssh-action@master
-
-      command_timeout: 200m
       with:
         host: ${{ secrets.SERVER_SSH_HOST }}
         username: ${{ secrets.SERVER_SSH_USER }}
