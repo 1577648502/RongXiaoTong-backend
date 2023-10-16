@@ -49,4 +49,4 @@ jobs:
         script:
           kill -9 $(lsof -t -i :8080)
           cd /www/wwwroot/target/target
-          java -jar /www/wwwroot/target/target/rongxiaotong-backend-0.0.1-SNAPSHOT.jar --server.port=8080 --spring.profiles.active=formal > nohup.out &
+          java -jar /www/wwwroot/target/target/rongxiaotong-backend-0.0.1-SNAPSHOT.jar --server.port=8080
