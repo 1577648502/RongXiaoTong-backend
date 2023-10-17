@@ -42,7 +42,7 @@ mybatis-plus:
 
 minio:
   #  host: https://minio.xiaoliu.lol/
-  host: http://127.0.0.1:9000
+  host: http://110.41.132.124:9000
   url: ${minio.host}/${minio.bucket}/
   access-key: minioadmin
   secret-key: minioadmin
