@@ -41,8 +41,8 @@ mybatis-plus:
       logic-not-delete-value: 0 # 逻辑未删除值（默认为 0）
 
 minio:
-  host: https://minio.xiaoliu.lol/
-  #  host: http://127.0.0.1:9000
+  #  host: https://minio.xiaoliu.lol/
+  host: http://127.0.0.1:9000
   url: ${minio.host}/${minio.bucket}/
   access-key: minioadmin
   secret-key: minioadmin
