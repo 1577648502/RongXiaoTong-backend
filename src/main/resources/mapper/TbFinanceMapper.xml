@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lfg.rongxiaotong.mapper.TbFinanceMapper">
+
+    <resultMap id="BaseResultMap" type="com.lfg.rongxiaotong.domain.TbFinance">
+            <id property="financeId" column="finance_id" jdbcType="INTEGER"/>
+            <result property="bankId" column="bank_id" jdbcType="INTEGER"/>
+            <result property="ownName" column="own_name" jdbcType="VARCHAR"/>
+            <result property="realName" column="real_name" jdbcType="VARCHAR"/>
+            <result property="phone" column="phone" jdbcType="VARCHAR"/>
+            <result property="idNum" column="id_num" jdbcType="VARCHAR"/>
+            <result property="status" column="status" jdbcType="INTEGER"/>
+            <result property="remark" column="remark" jdbcType="VARCHAR"/>
+            <result property="money" column="money" jdbcType="DECIMAL"/>
+            <result property="rate" column="rate" jdbcType="DECIMAL"/>
+            <result property="repayment" column="repayment" jdbcType="INTEGER"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="combinationName1" column="combination_name1" jdbcType="VARCHAR"/>
+            <result property="combinationPhone1" column="combination_phone1" jdbcType="VARCHAR"/>
+            <result property="combinationIdnum1" column="combination_idnum1" jdbcType="VARCHAR"/>
+            <result property="combinationName2" column="combination_name2" jdbcType="VARCHAR"/>
+            <result property="combinationPhone2" column="combination_phone2" jdbcType="VARCHAR"/>
+            <result property="combinationIdnum2" column="combination_idnum2" jdbcType="VARCHAR"/>
+            <result property="fileInfo" column="file_info" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        finance_id,bank_id,own_name,
+        real_name,phone,id_num,
+        status,remark,money,
+        rate,repayment,create_time,
+        update_time,combination_name1,combination_phone1,
+        combination_idnum1,combination_name2,combination_phone2,
+        combination_idnum2,file_info
+    </sql>
+</mapper>
