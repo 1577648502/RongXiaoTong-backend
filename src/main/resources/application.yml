@@ -7,7 +7,7 @@ spring:
       max-request-size: 100MB
   datasource:
 #    url: jdbc:mysql://localhost:3306/rongxiaotong?useUnicode=true&characterEncoding=utf-8&use
-    url: jdbc:mysql://rm-cn-g4t3fubq7000swfo.rwlb.rds.aliyuncs.com
+    url: jdbc:mysql://rm-cn-g4t3fubq7000swfo.rwlb.rds.aliyuncs.com/rongxiaotong?useUnicode=true&characterEncoding=utf-8&use
     #    url: jdbc:mysql://rongxiaotong.cewkjb4qqsj3.ap-east-1.rds.amazonaws.com/rongxiaotong?useUnicode=true&characterEncoding=utf-8&use
     #    url: jdbc:mysql://114.132.232.133:3306/qr_db
     #    url: jdbc:mysql://20.187.89.187:3306/qr_db
