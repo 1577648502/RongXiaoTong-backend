@@ -37,6 +37,7 @@ jobs:
         key: ${{ secrets.SERVER_RUN_SSH_KEY }}
         command_timeout: 10m
         source: "target/rongxiaotong-backend-0.0.1-SNAPSHOT.jar"
+        rm: true
         target: "/www/wwwroot/target"
     - name: Deploy
       uses: appleboy/ssh-action@master
