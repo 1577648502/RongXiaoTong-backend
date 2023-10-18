@@ -16,16 +16,16 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 /**
-* @author liufaguang
-* @description 针对表【tb_financing_intention(融资意向表)】的数据库操作Service实现
-* @createDate 2023-10-17 19:22:18
-*/
+ * @author liufaguang
+ * @description 针对表【tb_financing_intention(融资意向表)】的数据库操作Service实现
+ * @createDate 2023-10-17 19:22:18
+ */
 @Service
 public class TbFinancingIntentionServiceImpl extends ServiceImpl<TbFinancingIntentionMapper, TbFinancingIntention>
-    implements TbFinancingIntentionService{
+        implements TbFinancingIntentionService {
     @Override
     public R<Page<TbFinancingIntention>> getFinancingIntentionPageList(TbFinancingIntention tbFinancingIntention, Integer size, Integer current, HttpServletRequest request) {
-        User  user = (User) request.getSession().getAttribute("data");
+        User user = (User) request.getSession().getAttribute("data");
         String admin = IsAdmin.isAdmin(request);
         if (!admin.equals("未登录")) {
             if (null == size || null == current) {
@@ -33,11 +33,11 @@ public class TbFinancingIntentionServiceImpl extends ServiceImpl<TbFinancingInte
             }
             Page<TbFinancingIntention> page = new Page<>(current, size);
             LambdaQueryWrapper<TbFinancingIntention> wrapper = new LambdaQueryWrapper<>();
-            wrapper.eq( TbFinancingIntention::getUserName, user.getUserName());
+            wrapper.eq(tbFinancingIntention.getUserName() != null, TbFinancingIntention::getUserName, user.getUserName());
             Page<TbFinancingIntention> tbFinancingIntentionPage = this.page(page, wrapper);
             return R.success(tbFinancingIntentionPage);
         }
-        return  R.error("未登录");
+        return R.error("未登录");
 
     }
 
@@ -52,14 +52,14 @@ public class TbFinancingIntentionServiceImpl extends ServiceImpl<TbFinancingInte
             }
             return R.success(this.getById(financingIntentionId));
         }
-        return  R.error("未登录");
+        return R.error("未登录");
     }
 
     @Override
     public R<String> updateFinancingIntention(TbFinancingIntention tbFinancingIntention, HttpServletRequest request) {
         String admin = IsAdmin.isAdmin(request);
         if (!admin.equals("未登录")) {
-            if (null == tbFinancingIntention ) {
+            if (null == tbFinancingIntention) {
                 return R.error("参数错误");
             }
             boolean saved = this.updateById(tbFinancingIntention);
@@ -67,15 +67,15 @@ public class TbFinancingIntentionServiceImpl extends ServiceImpl<TbFinancingInte
                 return R.success("更新成功");
             }
         }
-        return  R.error("未登录");
+        return R.error("未登录");
     }
 
     @Override
     public R<String> addFinancingIntention(TbFinancingIntention tbFinancingIntention, HttpServletRequest request) {
-        User user = (User)request.getSession().getAttribute("data");
+        User user = (User) request.getSession().getAttribute("data");
         String admin = IsAdmin.isAdmin(request);
         if (!admin.equals("未登录")) {
-            if (null == tbFinancingIntention ) {
+            if (null == tbFinancingIntention) {
                 return R.error("参数错误");
             }
             tbFinancingIntention.setUserName(user.getUserName());
@@ -86,7 +86,7 @@ public class TbFinancingIntentionServiceImpl extends ServiceImpl<TbFinancingInte
                 return R.success("添加成功");
             }
         }
-        return  R.error("未登录");
+        return R.error("未登录");
     }
 
     @Override
@@ -101,7 +101,7 @@ public class TbFinancingIntentionServiceImpl extends ServiceImpl<TbFinancingInte
                 return R.success("删除成功");
             }
         }
-        return  R.error("未登录");
+        return R.error("未登录");
     }
 }
 

@@ -77,4 +77,6 @@ public interface UserService extends IService<User> {
     R<String> deleteUser(List<Long> ids, HttpServletRequest  request);
 
     R<String> modifyUser(User user, HttpServletRequest request);
+
+    R<String> getUserImg(String userName,HttpServletRequest request);
 }

@@ -40,6 +40,13 @@ public class UserController {
     public R<User> info(HttpServletRequest request) {
         return userService.info(request);
     }
+
+    @RequestMapping("/getUserImg")
+    public R<String> getUserImg(String userName,HttpServletRequest request) {
+        return userService.getUserImg(userName,request);
+    }
+
+
     @RequestMapping("/updateUser")
     public R<String> updateUser(@RequestBody User user, HttpServletRequest request) {
         return userService.updateUser(user,request);

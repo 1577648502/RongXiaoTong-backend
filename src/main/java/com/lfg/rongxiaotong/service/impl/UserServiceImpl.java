@@ -208,6 +208,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         return R.error("用户未登录");
     }
 
+    @Override
+    public R<String> getUserImg(String userName, HttpServletRequest request) {
+        String admin = IsAdmin.isAdmin(request);
+        if (!admin.equals("未登录")) {
+            LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+            wrapper.eq(User::getUserName, userName);
+            User byId = this.getOne(wrapper);
+            if (byId != null) {
+                return R.success(byId.getAvatar());
+            } else {
+                return R.error("用户不存在");
+            }
+        }
+        return R.error("用户未登录");
+    }
+
     public R<String> isUser(User user) {
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(User::getUserName, user.getUserName());
