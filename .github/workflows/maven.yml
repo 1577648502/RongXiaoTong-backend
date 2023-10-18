@@ -10,9 +10,9 @@ name: Java CI with Maven update file
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "run_out" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "run_out" ]
 
 jobs:
   build:
