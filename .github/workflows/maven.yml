@@ -31,10 +31,9 @@ jobs:
     - name: copy file
       uses: appleboy/scp-action@master
       with:
-        host: ${{ secrets.SERVER_SSH_HOST }}
-        username: ${{ secrets.SERVER_SSH_USER }}
-        key: ${{ secrets.SERVER_SSH_KEY }}
-        password: ${{ secrets.SERVER_SSH_PASS }}
+        host: ${{ secrets.SERVER_RUN_SSH_HOST }}
+        username: ${{ secrets.SERVER_RUN_SSH_USER }}
+        key: ${{ secrets.SERVER_RUN_SSH_KEY }}
         command_timeout: 10m
         source: "target/rongxiaotong-backend-0.0.1-SNAPSHOT.jar"
         rm: true
@@ -42,10 +41,9 @@ jobs:
     - name: Deploy
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.SERVER_SSH_HOST }}
-        username: ${{ secrets.SERVER_SSH_USER }}
-        key: ${{ secrets.SERVER_SSH_KEY }}
-        password: ${{ secrets.SERVER_SSH_PASS }}
+        host: ${{ secrets.SERVER_RUN_SSH_HOST }}
+        username: ${{ secrets.SERVER_RUN_SSH_USER }}
+        key: ${{ secrets.SERVER_RUN_SSH_KEY }}
         command_timeout: 20s
         script:  |
           cd /www/wwwroot/target/target
