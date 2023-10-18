@@ -1,12 +1,11 @@
 package com.lfg.rongxiaotong.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.lfg.rongxiaotong.domain.User;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lfg.rongxiaotong.domain.User;
 import com.lfg.rongxiaotong.utius.R;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -77,4 +76,6 @@ public interface UserService extends IService<User> {
     R<String> deleteUser(List<Long> ids, HttpServletRequest  request);
 
     R<String> modifyUser(User user, HttpServletRequest request);
+
+    R<String> getUserImg(String userName,HttpServletRequest request);
 }

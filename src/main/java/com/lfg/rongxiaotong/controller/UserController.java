@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lfg.rongxiaotong.domain.User;
 import com.lfg.rongxiaotong.service.UserService;
 import com.lfg.rongxiaotong.utius.R;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,6 +39,13 @@ public class UserController {
     public R<User> info(HttpServletRequest request) {
         return userService.info(request);
     }
+
+    @RequestMapping("/getUserImg")
+    public R<String> getUserImg(String userName,HttpServletRequest request) {
+        return userService.getUserImg(userName,request);
+    }
+
+
     @RequestMapping("/updateUser")
     public R<String> updateUser(@RequestBody User user, HttpServletRequest request) {
         return userService.updateUser(user,request);
