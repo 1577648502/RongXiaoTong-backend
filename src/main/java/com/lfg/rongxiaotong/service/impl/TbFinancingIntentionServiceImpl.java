@@ -13,6 +13,7 @@ import com.lfg.rongxiaotong.utius.R;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 
 /**
 * @author liufaguang
@@ -24,6 +25,7 @@ public class TbFinancingIntentionServiceImpl extends ServiceImpl<TbFinancingInte
     implements TbFinancingIntentionService{
     @Override
     public R<Page<TbFinancingIntention>> getFinancingIntentionPageList(TbFinancingIntention tbFinancingIntention, Integer size, Integer current, HttpServletRequest request) {
+        User  user = (User) request.getSession().getAttribute("data");
         String admin = IsAdmin.isAdmin(request);
         if (!admin.equals("未登录")) {
             if (null == size || null == current) {
@@ -31,7 +33,7 @@ public class TbFinancingIntentionServiceImpl extends ServiceImpl<TbFinancingInte
             }
             Page<TbFinancingIntention> page = new Page<>(current, size);
             LambdaQueryWrapper<TbFinancingIntention> wrapper = new LambdaQueryWrapper<>();
-            wrapper.like(null != tbFinancingIntention.getRealName(), TbFinancingIntention::getRealName, tbFinancingIntention.getRealName());
+            wrapper.eq( TbFinancingIntention::getUserName, user.getUserName());
             Page<TbFinancingIntention> tbFinancingIntentionPage = this.page(page, wrapper);
             return R.success(tbFinancingIntentionPage);
         }
@@ -42,6 +44,7 @@ public class TbFinancingIntentionServiceImpl extends ServiceImpl<TbFinancingInte
 
     @Override
     public R<TbFinancingIntention> getFinancingIntentionInfo(String financingIntentionId, HttpServletRequest request) {
+        User user = (User) request.getSession().getAttribute("data");
         String admin = IsAdmin.isAdmin(request);
         if (!admin.equals("未登录")) {
             if (null == financingIntentionId) {
@@ -75,6 +78,9 @@ public class TbFinancingIntentionServiceImpl extends ServiceImpl<TbFinancingInte
             if (null == tbFinancingIntention ) {
                 return R.error("参数错误");
             }
+            tbFinancingIntention.setUserName(user.getUserName());
+            tbFinancingIntention.setCreateTime(new Date());
+            tbFinancingIntention.setUpdateTime(new Date());
             boolean saved = this.save(tbFinancingIntention);
             if (saved) {
                 return R.success("添加成功");
