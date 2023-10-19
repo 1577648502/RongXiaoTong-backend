@@ -4,10 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lfg.rongxiaotong.domain.TbDiscuss;
-import com.lfg.rongxiaotong.domain.TbDiscuss;
 import com.lfg.rongxiaotong.domain.User;
-import com.lfg.rongxiaotong.service.TbDiscussService;
 import com.lfg.rongxiaotong.mapper.TbDiscussMapper;
+import com.lfg.rongxiaotong.service.TbDiscussService;
 import com.lfg.rongxiaotong.utius.IsAdmin;
 import com.lfg.rongxiaotong.utius.R;
 import org.springframework.stereotype.Service;
@@ -32,6 +31,7 @@ public class TbDiscussServiceImpl extends ServiceImpl<TbDiscussMapper, TbDiscuss
             }
             Page<TbDiscuss> page = new Page<>(current, size);
             LambdaQueryWrapper<TbDiscuss> wrapper = new LambdaQueryWrapper<>();
+            wrapper.orderByDesc(TbDiscuss::getCreateTime);
             wrapper.like(null != tbDiscuss.getKnowledgeId(), TbDiscuss::getKnowledgeId, tbDiscuss.getKnowledgeId());
             Page<TbDiscuss> tbDiscussPage = this.page(page, wrapper);
             return R.success(tbDiscussPage);

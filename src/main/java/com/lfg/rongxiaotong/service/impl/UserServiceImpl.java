@@ -137,6 +137,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
                 wrapper.like(null != user.getPhone(), User::getPhone, user.getPhone());
                 wrapper.like(null != user.getType(), User::getType, user.getType());
                 wrapper.like(null != user.getIsDelete(), User::getIsDelete, user.getIsDelete());
+                wrapper.orderByDesc(User::getUpdateTime);
                 Page<User> userPage = this.page(page, wrapper);
                 return R.success(userPage);
             } else {

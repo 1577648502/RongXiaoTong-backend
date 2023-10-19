@@ -1,4 +1,4 @@
-//package com.lfg.rongxiaotong.config;
+package com.lfg.rongxiaotong.config;//package com.lfg.rongxiaotong.config;
 //
 //import org.springframework.context.annotation.Bean;
 //import org.springframework.context.annotation.Configuration;

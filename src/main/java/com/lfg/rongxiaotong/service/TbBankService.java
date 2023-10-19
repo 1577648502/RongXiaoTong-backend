@@ -1,7 +1,6 @@
 package com.lfg.rongxiaotong.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.lfg.rongxiaotong.domain.TbBank;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.lfg.rongxiaotong.domain.TbBank;
 import com.lfg.rongxiaotong.utius.R;

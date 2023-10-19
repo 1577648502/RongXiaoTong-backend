@@ -1,7 +1,7 @@
 package com.lfg.rongxiaotong.mapper;
 
-import com.lfg.rongxiaotong.domain.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.lfg.rongxiaotong.domain.User;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

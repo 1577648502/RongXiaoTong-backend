@@ -1,20 +1,16 @@
 package com.lfg.rongxiaotong.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lfg.rongxiaotong.domain.TbShoppingcart;
-import com.lfg.rongxiaotong.domain.TbShoppingcart;
 import com.lfg.rongxiaotong.domain.User;
-import com.lfg.rongxiaotong.service.TbShoppingcartService;
 import com.lfg.rongxiaotong.mapper.TbShoppingcartMapper;
+import com.lfg.rongxiaotong.service.TbShoppingcartService;
 import com.lfg.rongxiaotong.utius.IsAdmin;
 import com.lfg.rongxiaotong.utius.R;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -33,6 +29,7 @@ public class TbShoppingcartServiceImpl extends ServiceImpl<TbShoppingcartMapper,
         if (!admin.equals("未登录")) {
             LambdaQueryWrapper<TbShoppingcart> wrapper = new LambdaQueryWrapper<>();
             wrapper.like(null != tbShoppingcart.getOwnName(), TbShoppingcart::getOwnName, tbShoppingcart.getOwnName());
+            wrapper.orderByDesc(TbShoppingcart::getUpdateTime);
             List<TbShoppingcart> shoppingcart = this.list(wrapper);
             return R.success(shoppingcart);
         }

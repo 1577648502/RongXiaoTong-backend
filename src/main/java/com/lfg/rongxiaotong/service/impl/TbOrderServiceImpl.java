@@ -3,7 +3,6 @@ package com.lfg.rongxiaotong.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-
 import com.lfg.rongxiaotong.domain.TbOrder;
 import com.lfg.rongxiaotong.domain.User;
 import com.lfg.rongxiaotong.mapper.TbOrderMapper;
@@ -35,6 +34,7 @@ public class TbOrderServiceImpl extends ServiceImpl<TbOrderMapper, TbOrder>
                 Page<TbOrder> page = new Page<>(current, size);
                 LambdaQueryWrapper<TbOrder> wrapper = new LambdaQueryWrapper<>();
                 wrapper.like(null != tbOrder.getOwnName(), TbOrder::getOwnName, tbOrder.getOwnName());
+                wrapper.orderByDesc(TbOrder::getUpdateTime);
                 Page<TbOrder> tbOrderPage = this.page(page, wrapper);
                 return R.success(tbOrderPage);
 

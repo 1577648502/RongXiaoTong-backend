@@ -1,13 +1,9 @@
 package com.lfg.rongxiaotong.controller;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lfg.rongxiaotong.domain.TbAddress;
 import com.lfg.rongxiaotong.service.TbAddressService;
 import com.lfg.rongxiaotong.utius.R;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -19,12 +15,12 @@ public class TbAddressController {
     @Resource
     private TbAddressService tbAddressService;
 
-    @RequestMapping("/getAddressPageList")
+    @PostMapping("/getAddressPageList")
     private R<List<TbAddress>> getAddressPageList(@RequestBody TbAddress tbAddress, HttpServletRequest request) {
         return tbAddressService.getAddressPageList(tbAddress, request);
     }
 
-    @RequestMapping("/getAddressInfo")
+    @GetMapping("/getAddressInfo")
     private R<TbAddress> getAddressInfo(@RequestParam String addressId, HttpServletRequest request) {
         if (addressId == null) {
             return R.error("农业知识id不能为空");
@@ -32,7 +28,7 @@ public class TbAddressController {
         return tbAddressService.getAddressInfo(addressId, request);
     }
 
-    @RequestMapping("updateAddress")
+    @PostMapping("updateAddress")
     private R<String> updateAddress(@RequestBody TbAddress tbAddress, HttpServletRequest request) {
         if (tbAddress == null) {
             return R.error("农业知识id不能为空");
@@ -40,7 +36,7 @@ public class TbAddressController {
         return tbAddressService.updateAddress(tbAddress, request);
     }
 
-    @RequestMapping("setDefaultAddress")
+    @GetMapping("setDefaultAddress")
     private R<String> setDefaultAddress(@RequestParam String defaultAddress, String newAddress, HttpServletRequest request) {
         if (defaultAddress == null || newAddress == null) {
             return R.error("地址不能为空");
@@ -48,7 +44,7 @@ public class TbAddressController {
         return tbAddressService.setDefaultAddress(defaultAddress, newAddress, request);
     }
 
-    @RequestMapping("addAddress")
+    @PostMapping("addAddress")
     private R<String> addAddress(@RequestBody TbAddress tbAddress, HttpServletRequest request) {
         if (tbAddress == null) {
             return R.error("农业知识id不能为空");
@@ -56,7 +52,7 @@ public class TbAddressController {
         return tbAddressService.addAddress(tbAddress, request);
     }
 
-    @RequestMapping("deleteAddress")
+    @DeleteMapping("deleteAddress")
     private R<String> deleteAddress(@RequestParam String addressId, HttpServletRequest request) {
         if (addressId == null || addressId.isEmpty()) {
             return R.error("农业知识id不能为空");

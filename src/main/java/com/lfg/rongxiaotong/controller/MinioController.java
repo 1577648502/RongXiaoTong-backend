@@ -1,12 +1,12 @@
 package com.lfg.rongxiaotong.controller;
 
-import com.lfg.rongxiaotong.domain.beans.ImageVo;
 import cn.hutool.core.io.FileUtil;
-import net.coobird.thumbnailator.geometry.Positions;
-import org.apache.commons.lang3.RandomStringUtils;
+import com.lfg.rongxiaotong.domain.beans.ImageVo;
 import com.lfg.rongxiaotong.utius.MinioUtilS;
 import com.lfg.rongxiaotong.utius.R;
-import lombok.extern.slf4j.Slf4j;
+import net.coobird.thumbnailator.Thumbnails;
+import net.coobird.thumbnailator.geometry.Positions;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,18 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import net.coobird.thumbnailator.Thumbnails;
+
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.InputStream;
 import java.util.Arrays;
-
-import static cn.hutool.core.img.ImgUtil.getImageInputStream;
 
 @RestController
 @RequestMapping("/file")

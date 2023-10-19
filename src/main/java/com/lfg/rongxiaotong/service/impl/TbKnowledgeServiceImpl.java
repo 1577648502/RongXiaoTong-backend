@@ -4,10 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lfg.rongxiaotong.domain.TbKnowledge;
-import com.lfg.rongxiaotong.domain.TbKnowledge;
 import com.lfg.rongxiaotong.domain.User;
-import com.lfg.rongxiaotong.service.TbKnowledgeService;
 import com.lfg.rongxiaotong.mapper.TbKnowledgeMapper;
+import com.lfg.rongxiaotong.service.TbKnowledgeService;
 import com.lfg.rongxiaotong.utius.IsAdmin;
 import com.lfg.rongxiaotong.utius.R;
 import org.springframework.stereotype.Service;
@@ -37,6 +36,7 @@ public class TbKnowledgeServiceImpl extends ServiceImpl<TbKnowledgeMapper, TbKno
             wrapper.like(null != tbKnowledge.getOwnName(), TbKnowledge::getOwnName, tbKnowledge.getOwnName());
             wrapper.like(null != tbKnowledge.getTitle(), TbKnowledge::getTitle, tbKnowledge.getTitle());
             wrapper.like(null != tbKnowledge.getContent(), TbKnowledge::getContent, tbKnowledge.getContent());
+            wrapper.orderByDesc(TbKnowledge::getUpdateTime);
             Page<TbKnowledge> tbKnowledgePage = this.page(page, wrapper);
             return R.success(tbKnowledgePage);
         }

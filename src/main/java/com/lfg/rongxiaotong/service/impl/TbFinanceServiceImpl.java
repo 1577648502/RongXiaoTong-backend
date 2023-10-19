@@ -4,10 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lfg.rongxiaotong.domain.TbFinance;
-import com.lfg.rongxiaotong.domain.TbFinance;
 import com.lfg.rongxiaotong.domain.User;
-import com.lfg.rongxiaotong.service.TbFinanceService;
 import com.lfg.rongxiaotong.mapper.TbFinanceMapper;
+import com.lfg.rongxiaotong.service.TbFinanceService;
 import com.lfg.rongxiaotong.utius.IsAdmin;
 import com.lfg.rongxiaotong.utius.R;
 import org.springframework.stereotype.Service;
@@ -33,6 +32,7 @@ public class TbFinanceServiceImpl extends ServiceImpl<TbFinanceMapper, TbFinance
             Page<TbFinance> page = new Page<>(current, size);
             LambdaQueryWrapper<TbFinance> wrapper = new LambdaQueryWrapper<>();
             wrapper.like(null != tbFinance.getOwnName(), TbFinance::getOwnName, tbFinance.getOwnName());
+            wrapper.orderByDesc(TbFinance::getUpdateTime);
             Page<TbFinance> tbFinancePage = this.page(page, wrapper);
             return R.success(tbFinancePage);
         }
