@@ -34,6 +34,7 @@ public class TbFinancingIntentionServiceImpl extends ServiceImpl<TbFinancingInte
             Page<TbFinancingIntention> page = new Page<>(current, size);
             LambdaQueryWrapper<TbFinancingIntention> wrapper = new LambdaQueryWrapper<>();
             wrapper.eq(tbFinancingIntention.getUserName() != null, TbFinancingIntention::getUserName, user.getUserName());
+            wrapper.orderByDesc(TbFinancingIntention::getUpdateTime);
             Page<TbFinancingIntention> tbFinancingIntentionPage = this.page(page, wrapper);
             return R.success(tbFinancingIntentionPage);
         }

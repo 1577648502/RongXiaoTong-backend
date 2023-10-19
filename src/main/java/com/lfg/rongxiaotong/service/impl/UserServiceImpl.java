@@ -3,6 +3,7 @@ package com.lfg.rongxiaotong.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lfg.rongxiaotong.domain.TbOrder;
 import com.lfg.rongxiaotong.domain.User;
 import com.lfg.rongxiaotong.service.UserService;
 import com.lfg.rongxiaotong.mapper.UserMapper;
@@ -140,6 +141,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
                 wrapper.like(null != user.getPhone(), User::getPhone, user.getPhone());
                 wrapper.like(null != user.getType(), User::getType, user.getType());
                 wrapper.like(null != user.getIsDelete(), User::getIsDelete, user.getIsDelete());
+                wrapper.orderByDesc(User::getUpdateTime);
                 Page<User> userPage = this.page(page, wrapper);
                 return R.success(userPage);
             } else {

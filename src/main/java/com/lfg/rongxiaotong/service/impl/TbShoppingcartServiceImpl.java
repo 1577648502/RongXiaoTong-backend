@@ -33,6 +33,7 @@ public class TbShoppingcartServiceImpl extends ServiceImpl<TbShoppingcartMapper,
         if (!admin.equals("未登录")) {
             LambdaQueryWrapper<TbShoppingcart> wrapper = new LambdaQueryWrapper<>();
             wrapper.like(null != tbShoppingcart.getOwnName(), TbShoppingcart::getOwnName, tbShoppingcart.getOwnName());
+            wrapper.orderByDesc(TbShoppingcart::getUpdateTime);
             List<TbShoppingcart> shoppingcart = this.list(wrapper);
             return R.success(shoppingcart);
         }

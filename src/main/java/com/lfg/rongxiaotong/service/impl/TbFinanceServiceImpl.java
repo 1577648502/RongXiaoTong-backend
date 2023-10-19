@@ -33,6 +33,7 @@ public class TbFinanceServiceImpl extends ServiceImpl<TbFinanceMapper, TbFinance
             Page<TbFinance> page = new Page<>(current, size);
             LambdaQueryWrapper<TbFinance> wrapper = new LambdaQueryWrapper<>();
             wrapper.like(null != tbFinance.getOwnName(), TbFinance::getOwnName, tbFinance.getOwnName());
+            wrapper.orderByDesc(TbFinance::getUpdateTime);
             Page<TbFinance> tbFinancePage = this.page(page, wrapper);
             return R.success(tbFinancePage);
         }

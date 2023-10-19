@@ -35,6 +35,7 @@ public class TbOrderServiceImpl extends ServiceImpl<TbOrderMapper, TbOrder>
                 Page<TbOrder> page = new Page<>(current, size);
                 LambdaQueryWrapper<TbOrder> wrapper = new LambdaQueryWrapper<>();
                 wrapper.like(null != tbOrder.getOwnName(), TbOrder::getOwnName, tbOrder.getOwnName());
+                wrapper.orderByDesc(TbOrder::getUpdateTime);
                 Page<TbOrder> tbOrderPage = this.page(page, wrapper);
                 return R.success(tbOrderPage);
 

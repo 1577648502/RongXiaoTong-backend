@@ -32,6 +32,7 @@ public class TbDiscussServiceImpl extends ServiceImpl<TbDiscussMapper, TbDiscuss
             }
             Page<TbDiscuss> page = new Page<>(current, size);
             LambdaQueryWrapper<TbDiscuss> wrapper = new LambdaQueryWrapper<>();
+            wrapper.orderByDesc(TbDiscuss::getCreateTime);
             wrapper.like(null != tbDiscuss.getKnowledgeId(), TbDiscuss::getKnowledgeId, tbDiscuss.getKnowledgeId());
             Page<TbDiscuss> tbDiscussPage = this.page(page, wrapper);
             return R.success(tbDiscussPage);

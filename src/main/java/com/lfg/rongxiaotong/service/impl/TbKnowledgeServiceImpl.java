@@ -37,6 +37,7 @@ public class TbKnowledgeServiceImpl extends ServiceImpl<TbKnowledgeMapper, TbKno
             wrapper.like(null != tbKnowledge.getOwnName(), TbKnowledge::getOwnName, tbKnowledge.getOwnName());
             wrapper.like(null != tbKnowledge.getTitle(), TbKnowledge::getTitle, tbKnowledge.getTitle());
             wrapper.like(null != tbKnowledge.getContent(), TbKnowledge::getContent, tbKnowledge.getContent());
+            wrapper.orderByDesc(TbKnowledge::getUpdateTime);
             Page<TbKnowledge> tbKnowledgePage = this.page(page, wrapper);
             return R.success(tbKnowledgePage);
         }
