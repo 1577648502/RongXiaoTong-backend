@@ -3,6 +3,7 @@ package com.lfg.rongxiaotong.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lfg.rongxiaotong.domain.TbBank;
 import com.lfg.rongxiaotong.domain.TbFinancingIntention;
 import com.lfg.rongxiaotong.domain.TbFinancingIntention;
 import com.lfg.rongxiaotong.domain.User;
@@ -10,10 +11,13 @@ import com.lfg.rongxiaotong.service.TbFinancingIntentionService;
 import com.lfg.rongxiaotong.mapper.TbFinancingIntentionMapper;
 import com.lfg.rongxiaotong.utius.IsAdmin;
 import com.lfg.rongxiaotong.utius.R;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author liufaguang
@@ -23,6 +27,8 @@ import java.util.Date;
 @Service
 public class TbFinancingIntentionServiceImpl extends ServiceImpl<TbFinancingIntentionMapper, TbFinancingIntention>
         implements TbFinancingIntentionService {
+    @Resource
+    private RedisTemplate<String,Page<TbFinancingIntention>> redisTemplate;
     @Override
     public R<Page<TbFinancingIntention>> getFinancingIntentionPageList(TbFinancingIntention tbFinancingIntention, Integer size, Integer current, HttpServletRequest request) {
         User user = (User) request.getSession().getAttribute("data");
@@ -31,11 +37,17 @@ public class TbFinancingIntentionServiceImpl extends ServiceImpl<TbFinancingInte
             if (null == size || null == current) {
                 return R.error("参数错误");
             }
+            String redisName = "com:lfg:rongxiaotong:financingIntention";
+            Page<TbFinancingIntention> financingIntentionPage = redisTemplate.opsForValue().get(redisName);
+//            if (null != redisTemplate.opsForValue().get(redisName)) {
+//                return R.success(financingIntentionPage);
+//            }
             Page<TbFinancingIntention> page = new Page<>(current, size);
             LambdaQueryWrapper<TbFinancingIntention> wrapper = new LambdaQueryWrapper<>();
             wrapper.eq(tbFinancingIntention.getUserName() != null, TbFinancingIntention::getUserName, user.getUserName());
             wrapper.orderByDesc(TbFinancingIntention::getUpdateTime);
             Page<TbFinancingIntention> tbFinancingIntentionPage = this.page(page, wrapper);
+//            redisTemplate.opsForValue().set(redisName,tbFinancingIntentionPage,60, TimeUnit.MINUTES);
             return R.success(tbFinancingIntentionPage);
         }
         return R.error("未登录");

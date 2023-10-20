@@ -3,6 +3,7 @@ package com.lfg.rongxiaotong.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lfg.rongxiaotong.domain.TbBank;
 import com.lfg.rongxiaotong.domain.TbKnowledge;
 import com.lfg.rongxiaotong.domain.TbKnowledge;
 import com.lfg.rongxiaotong.domain.User;
@@ -10,11 +11,14 @@ import com.lfg.rongxiaotong.service.TbKnowledgeService;
 import com.lfg.rongxiaotong.mapper.TbKnowledgeMapper;
 import com.lfg.rongxiaotong.utius.IsAdmin;
 import com.lfg.rongxiaotong.utius.R;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
 * @author liufaguang
@@ -24,6 +28,8 @@ import java.util.List;
 @Service
 public class TbKnowledgeServiceImpl extends ServiceImpl<TbKnowledgeMapper, TbKnowledge>
     implements TbKnowledgeService{
+    @Resource
+    private RedisTemplate<String,Page<TbKnowledge>> redisTemplate;
 
     @Override
     public R<Page<TbKnowledge>> getKnowledgePageList(TbKnowledge tbKnowledge, Integer size, Integer current, HttpServletRequest request) {
@@ -32,6 +38,11 @@ public class TbKnowledgeServiceImpl extends ServiceImpl<TbKnowledgeMapper, TbKno
             if (null == size || null == current) {
                 return R.error("参数错误");
             }
+            String redisName = "com:lfg:rongxiaotong:knowledge";
+            Page<TbKnowledge> knowledgePage = redisTemplate.opsForValue().get(redisName);
+            if (null != redisTemplate.opsForValue().get(redisName)) {
+                return R.success(knowledgePage);
+            }
             Page<TbKnowledge> page = new Page<>(current, size);
             LambdaQueryWrapper<TbKnowledge> wrapper = new LambdaQueryWrapper<>();
             wrapper.like(null != tbKnowledge.getOwnName(), TbKnowledge::getOwnName, tbKnowledge.getOwnName());
@@ -39,6 +50,7 @@ public class TbKnowledgeServiceImpl extends ServiceImpl<TbKnowledgeMapper, TbKno
             wrapper.like(null != tbKnowledge.getContent(), TbKnowledge::getContent, tbKnowledge.getContent());
             wrapper.orderByDesc(TbKnowledge::getUpdateTime);
             Page<TbKnowledge> tbKnowledgePage = this.page(page, wrapper);
+            redisTemplate.opsForValue().set(redisName,tbKnowledgePage,60, TimeUnit.MINUTES);
             return R.success(tbKnowledgePage);
         }
         return  R.error("未登录");

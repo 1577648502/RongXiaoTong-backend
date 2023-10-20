@@ -10,10 +10,13 @@ import com.lfg.rongxiaotong.service.TbQuestionService;
 import com.lfg.rongxiaotong.mapper.TbQuestionMapper;
 import com.lfg.rongxiaotong.utius.IsAdmin;
 import com.lfg.rongxiaotong.utius.R;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
 * @author liufaguang
@@ -23,6 +26,8 @@ import java.util.Date;
 @Service
 public class TbQuestionServiceImpl extends ServiceImpl<TbQuestionMapper, TbQuestion>
     implements TbQuestionService{
+    @Resource
+    private RedisTemplate<String,Page<TbQuestion>> redisTemplate;
     @Override
     public R<Page<TbQuestion>> getQuestionPageList(TbQuestion tbQuestion, Integer size, Integer current, HttpServletRequest request) {
         String admin = IsAdmin.isAdmin(request);
@@ -30,10 +35,16 @@ public class TbQuestionServiceImpl extends ServiceImpl<TbQuestionMapper, TbQuest
             if (null == size || null == current) {
                 return R.error("参数错误");
             }
+            String redisName = "com:lfg:rongxiaotong:quesstion";
+            Page<TbQuestion> questionPage = redisTemplate.opsForValue().get(redisName);
+            if (null != redisTemplate.opsForValue().get(redisName)) {
+                return R.success(questionPage);
+            }
             Page<TbQuestion> page = new Page<>(current, size);
             LambdaQueryWrapper<TbQuestion> wrapper = new LambdaQueryWrapper<>();
             wrapper.like(null != tbQuestion.getTitle(), TbQuestion::getTitle, tbQuestion.getTitle());
             Page<TbQuestion> tbQuestionPage = this.page(page, wrapper);
+            redisTemplate.opsForValue().set(redisName,tbQuestionPage,60, TimeUnit.MINUTES);
             return R.success(tbQuestionPage);
         }
         return  R.error("未登录");

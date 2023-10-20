@@ -10,9 +10,12 @@ import com.lfg.rongxiaotong.service.TbReserveService;
 import com.lfg.rongxiaotong.mapper.TbReserveMapper;
 import com.lfg.rongxiaotong.utius.IsAdmin;
 import com.lfg.rongxiaotong.utius.R;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.concurrent.TimeUnit;
 
 /**
 * @author liufaguang
@@ -22,6 +25,8 @@ import javax.servlet.http.HttpServletRequest;
 @Service
 public class TbReserveServiceImpl extends ServiceImpl<TbReserveMapper, TbReserve>
     implements TbReserveService{
+    @Resource
+    private RedisTemplate<String,Page<TbReserve>> redisTemplate;
     @Override
     public R<Page<TbReserve>> getReservePageList(TbReserve tbReserve, Integer size, Integer current, HttpServletRequest request) {
         String admin = IsAdmin.isAdmin(request);
@@ -29,10 +34,16 @@ public class TbReserveServiceImpl extends ServiceImpl<TbReserveMapper, TbReserve
             if (null == size || null == current) {
                 return R.error("参数错误");
             }
+            String redisName = "com:lfg:rongxiaotong:user";
+            Page<TbReserve> reservePage = redisTemplate.opsForValue().get(redisName);
+            if (null != redisTemplate.opsForValue().get(redisName)) {
+                return R.success(reservePage);
+            }
             Page<TbReserve> page = new Page<>(current, size);
             LambdaQueryWrapper<TbReserve> wrapper = new LambdaQueryWrapper<>();
             wrapper.like(null != tbReserve.getPlantName(), TbReserve::getPlantName, tbReserve.getPlantName());
             Page<TbReserve> tbReservePage = this.page(page, wrapper);
+            redisTemplate.opsForValue().set(redisName,tbReservePage,60, TimeUnit.MINUTES);
             return R.success(tbReservePage);
         }
         return  R.error("未登录");

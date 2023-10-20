@@ -11,10 +11,13 @@ import com.lfg.rongxiaotong.service.TbAddressService;
 import com.lfg.rongxiaotong.mapper.TbAddressMapper;
 import com.lfg.rongxiaotong.utius.IsAdmin;
 import com.lfg.rongxiaotong.utius.R;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
 * @author liufaguang
@@ -24,14 +27,22 @@ import java.util.List;
 @Service
 public class TbAddressServiceImpl extends ServiceImpl<TbAddressMapper, TbAddress>
     implements TbAddressService{
+    @Resource
+    private RedisTemplate<String,List<TbAddress>> redisTemplate;
     @Override
     public R<List<TbAddress>> getAddressPageList(TbAddress tbAddress, HttpServletRequest request) {
         String admin = IsAdmin.isAdmin(request);
         if (!admin.equals("未登录")) {
+            String redisName = "com:lfg:rongxiaotong:address";
+            List<TbAddress> addressPage = redisTemplate.opsForValue().get(redisName);
+            if (null != redisTemplate.opsForValue().get(redisName)) {
+                return R.success(addressPage);
+            }
             LambdaQueryWrapper<TbAddress> wrapper = new LambdaQueryWrapper<>();
             wrapper.eq(null != tbAddress.getOwnName(), TbAddress::getOwnName, tbAddress.getOwnName());
             wrapper.eq(null != tbAddress.getIsDefault(), TbAddress::getIsDefault, tbAddress.getIsDefault());
             List<TbAddress> tbAddressPage = this.list(wrapper);
+            redisTemplate.opsForValue().set(redisName,tbAddressPage,60, TimeUnit.MINUTES);
             return R.success(tbAddressPage);
         }
         return  R.error("未登录");

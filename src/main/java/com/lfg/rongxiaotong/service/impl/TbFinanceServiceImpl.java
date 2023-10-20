@@ -3,6 +3,7 @@ package com.lfg.rongxiaotong.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lfg.rongxiaotong.domain.TbBank;
 import com.lfg.rongxiaotong.domain.TbFinance;
 import com.lfg.rongxiaotong.domain.TbFinance;
 import com.lfg.rongxiaotong.domain.User;
@@ -10,10 +11,13 @@ import com.lfg.rongxiaotong.service.TbFinanceService;
 import com.lfg.rongxiaotong.mapper.TbFinanceMapper;
 import com.lfg.rongxiaotong.utius.IsAdmin;
 import com.lfg.rongxiaotong.utius.R;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author liufaguang
@@ -23,6 +27,8 @@ import java.util.Date;
 @Service
 public class TbFinanceServiceImpl extends ServiceImpl<TbFinanceMapper, TbFinance>
         implements TbFinanceService {
+    @Resource
+    private RedisTemplate<String,Page<TbFinance>> redisTemplate;
     @Override
     public R<Page<TbFinance>> getFinancePageList(TbFinance tbFinance, Integer size, Integer current, HttpServletRequest request) {
         String admin = IsAdmin.isAdmin(request);
@@ -30,11 +36,17 @@ public class TbFinanceServiceImpl extends ServiceImpl<TbFinanceMapper, TbFinance
             if (null == size || null == current) {
                 return R.error("参数错误");
             }
+            String redisName = "com:lfg:rongxiaotong:finance";
+            Page<TbFinance> financePage = redisTemplate.opsForValue().get(redisName);
+//            if (null != redisTemplate.opsForValue().get(redisName)) {
+//                return R.success(financePage);
+//            }
             Page<TbFinance> page = new Page<>(current, size);
             LambdaQueryWrapper<TbFinance> wrapper = new LambdaQueryWrapper<>();
             wrapper.like(null != tbFinance.getOwnName(), TbFinance::getOwnName, tbFinance.getOwnName());
             wrapper.orderByDesc(TbFinance::getUpdateTime);
             Page<TbFinance> tbFinancePage = this.page(page, wrapper);
+//            redisTemplate.opsForValue().set(redisName,tbFinancePage,60, TimeUnit.MINUTES);
             return R.success(tbFinancePage);
         }
         return R.error("未登录");

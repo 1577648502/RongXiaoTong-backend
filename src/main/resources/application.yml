@@ -1,5 +1,9 @@
 spring:
-
+  redis:
+    host: 110.41.132.124
+    port: 7529
+    database: 0
+    password: 12345678
   servlet:
     multipart:
       enabled: true
