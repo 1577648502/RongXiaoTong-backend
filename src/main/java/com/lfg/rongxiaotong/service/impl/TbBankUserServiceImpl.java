@@ -35,8 +35,8 @@ public class TbBankUserServiceImpl extends ServiceImpl<TbBankUserMapper, TbBankU
             if (null == size || null == current) {
                 return R.error("参数错误");
             }
-            String redisName = "com:lfg:rongxiaotong:bankuser";
-            Page<TbBankUser> tbBankPage = redisTemplate.opsForValue().get(redisName);
+            String redisName = "com:lfg:rongxiaotong:bankuser:";
+            Page<TbBankUser> tbBankPage = redisTemplate.opsForValue().get(redisName+ current);
             if (null != redisTemplate.opsForValue().get(redisName)) {
                 return R.success(tbBankPage);
             }
@@ -44,7 +44,7 @@ public class TbBankUserServiceImpl extends ServiceImpl<TbBankUserMapper, TbBankU
             LambdaQueryWrapper<TbBankUser> wrapper = new LambdaQueryWrapper<>();
             wrapper.like(null != tbBankUser.getUserName(), TbBankUser::getUserName, tbBankUser.getUserName());
             Page<TbBankUser> tbBankUserPage = this.page(page, wrapper);
-            redisTemplate.opsForValue().set(redisName,tbBankUserPage,60, TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set(redisName+current,tbBankUserPage,60, TimeUnit.MINUTES);
             return R.success(tbBankUserPage);
         }
         return  R.error("未登录");

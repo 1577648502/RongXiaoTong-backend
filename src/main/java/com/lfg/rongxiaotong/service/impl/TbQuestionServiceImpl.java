@@ -35,8 +35,8 @@ public class TbQuestionServiceImpl extends ServiceImpl<TbQuestionMapper, TbQuest
             if (null == size || null == current) {
                 return R.error("参数错误");
             }
-            String redisName = "com:lfg:rongxiaotong:quesstion";
-            Page<TbQuestion> questionPage = redisTemplate.opsForValue().get(redisName);
+            String redisName = "com:lfg:rongxiaotong:quesstion:";
+            Page<TbQuestion> questionPage = redisTemplate.opsForValue().get(redisName+ current);
             if (null != redisTemplate.opsForValue().get(redisName)) {
                 return R.success(questionPage);
             }
@@ -44,7 +44,7 @@ public class TbQuestionServiceImpl extends ServiceImpl<TbQuestionMapper, TbQuest
             LambdaQueryWrapper<TbQuestion> wrapper = new LambdaQueryWrapper<>();
             wrapper.like(null != tbQuestion.getTitle(), TbQuestion::getTitle, tbQuestion.getTitle());
             Page<TbQuestion> tbQuestionPage = this.page(page, wrapper);
-            redisTemplate.opsForValue().set(redisName,tbQuestionPage,60, TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set(redisName+current,tbQuestionPage,60, TimeUnit.MINUTES);
             return R.success(tbQuestionPage);
         }
         return  R.error("未登录");

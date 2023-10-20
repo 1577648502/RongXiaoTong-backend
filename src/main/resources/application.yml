@@ -27,7 +27,10 @@ server:
   port: 8080
   reactive:
     session:
-      timeout: 60000s
+      timeout: 36000s
+  servlet:
+    session:
+      timeout:  36000s
 # 日志
 logging:
   level:
@@ -53,3 +56,4 @@ minio:
   access-key: minioadmin
   secret-key: minioadmin
   bucket: public
+

@@ -10,9 +10,11 @@ import com.lfg.rongxiaotong.service.TbShoppingcartService;
 import com.lfg.rongxiaotong.mapper.TbShoppingcartMapper;
 import com.lfg.rongxiaotong.utius.IsAdmin;
 import com.lfg.rongxiaotong.utius.R;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -27,19 +29,29 @@ import java.util.List;
 @Service
 public class TbShoppingcartServiceImpl extends ServiceImpl<TbShoppingcartMapper, TbShoppingcart>
         implements TbShoppingcartService {
+    @Resource
+    private RedisTemplate<String, List<TbShoppingcart>> redisTemplate;
+
     @Override
     public R<List<TbShoppingcart>> getShoppingcartPageList(TbShoppingcart tbShoppingcart, HttpServletRequest request) {
         String admin = IsAdmin.isAdmin(request);
         if (!admin.equals("未登录")) {
-            LambdaQueryWrapper<TbShoppingcart> wrapper = new LambdaQueryWrapper<>();
+            String redisName = "com:lfg:rongxiaotong:shoppingCart:";
+            List<TbShoppingcart> RedisShoppingCart = redisTemplate.opsForValue().get(redisName + request.getSession().getId());
+            if ( RedisShoppingCart!= null){
+                return R.success(RedisShoppingCart);
+            }
+                LambdaQueryWrapper<TbShoppingcart> wrapper = new LambdaQueryWrapper<>();
             wrapper.like(null != tbShoppingcart.getOwnName(), TbShoppingcart::getOwnName, tbShoppingcart.getOwnName());
             wrapper.orderByDesc(TbShoppingcart::getUpdateTime);
             List<TbShoppingcart> shoppingcart = this.list(wrapper);
+            redisTemplate.opsForValue().set(redisName + request.getSession().getId(), shoppingcart);
             return R.success(shoppingcart);
         }
         return R.error("未登录");
 
     }
+
     @Override
     public R<TbShoppingcart> getShoppingcartInfo(String shoppingcartId, HttpServletRequest request) {
         String admin = IsAdmin.isAdmin(request);
@@ -111,7 +123,7 @@ public class TbShoppingcartServiceImpl extends ServiceImpl<TbShoppingcartMapper,
             boolean saved = this.removeByIds(shoppingcartId);
             if (saved) {
                 return R.success("删除成功");
-            }else {
+            } else {
                 return R.error("删除失败");
             }
         }

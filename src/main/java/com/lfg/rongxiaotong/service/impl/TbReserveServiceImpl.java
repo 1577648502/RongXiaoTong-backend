@@ -34,8 +34,8 @@ public class TbReserveServiceImpl extends ServiceImpl<TbReserveMapper, TbReserve
             if (null == size || null == current) {
                 return R.error("参数错误");
             }
-            String redisName = "com:lfg:rongxiaotong:user";
-            Page<TbReserve> reservePage = redisTemplate.opsForValue().get(redisName);
+            String redisName = "com:lfg:rongxiaotong:user:";
+            Page<TbReserve> reservePage = redisTemplate.opsForValue().get(redisName+ current);
             if (null != redisTemplate.opsForValue().get(redisName)) {
                 return R.success(reservePage);
             }
@@ -43,7 +43,7 @@ public class TbReserveServiceImpl extends ServiceImpl<TbReserveMapper, TbReserve
             LambdaQueryWrapper<TbReserve> wrapper = new LambdaQueryWrapper<>();
             wrapper.like(null != tbReserve.getPlantName(), TbReserve::getPlantName, tbReserve.getPlantName());
             Page<TbReserve> tbReservePage = this.page(page, wrapper);
-            redisTemplate.opsForValue().set(redisName,tbReservePage,60, TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set(redisName+current,tbReservePage,60, TimeUnit.MINUTES);
             return R.success(tbReservePage);
         }
         return  R.error("未登录");
