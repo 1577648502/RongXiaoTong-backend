@@ -9,9 +9,12 @@ import com.lfg.rongxiaotong.mapper.TbBankUserMapper;
 import com.lfg.rongxiaotong.service.TbBankUserService;
 import com.lfg.rongxiaotong.utius.IsAdmin;
 import com.lfg.rongxiaotong.utius.R;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.concurrent.TimeUnit;
 
 /**
 * @author liufaguang
@@ -21,6 +24,8 @@ import javax.servlet.http.HttpServletRequest;
 @Service
 public class TbBankUserServiceImpl extends ServiceImpl<TbBankUserMapper, TbBankUser>
     implements TbBankUserService{
+    @Resource
+    private RedisTemplate<String,Page<TbBankUser>> redisTemplate;
     @Override
     public R<Page<TbBankUser>> getBankUserPageList(TbBankUser tbBankUser, Integer size, Integer current, HttpServletRequest request) {
         String admin = IsAdmin.isAdmin(request);
@@ -28,10 +33,16 @@ public class TbBankUserServiceImpl extends ServiceImpl<TbBankUserMapper, TbBankU
             if (null == size || null == current) {
                 return R.error("参数错误");
             }
+            String redisName = "com:lfg:rongxiaotong:bankuser";
+            Page<TbBankUser> tbBankPage = redisTemplate.opsForValue().get(redisName);
+            if (null != redisTemplate.opsForValue().get(redisName)) {
+                return R.success(tbBankPage);
+            }
             Page<TbBankUser> page = new Page<>(current, size);
             LambdaQueryWrapper<TbBankUser> wrapper = new LambdaQueryWrapper<>();
             wrapper.like(null != tbBankUser.getUserName(), TbBankUser::getUserName, tbBankUser.getUserName());
             Page<TbBankUser> tbBankUserPage = this.page(page, wrapper);
+            redisTemplate.opsForValue().set(redisName,tbBankUserPage,60, TimeUnit.MINUTES);
             return R.success(tbBankUserPage);
         }
         return  R.error("未登录");

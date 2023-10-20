@@ -36,8 +36,6 @@ public class TbShoppingcartServiceImpl extends ServiceImpl<TbShoppingcartMapper,
         return R.error("未登录");
 
     }
-
-
     @Override
     public R<TbShoppingcart> getShoppingcartInfo(String shoppingcartId, HttpServletRequest request) {
         String admin = IsAdmin.isAdmin(request);

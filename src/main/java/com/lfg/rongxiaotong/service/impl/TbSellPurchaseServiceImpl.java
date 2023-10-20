@@ -9,6 +9,7 @@ import com.lfg.rongxiaotong.service.TbSellPurchaseService;
 import com.lfg.rongxiaotong.service.TbShoppingcartService;
 import com.lfg.rongxiaotong.utius.IsAdmin;
 import com.lfg.rongxiaotong.utius.R;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +17,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author liufaguang
@@ -26,6 +28,8 @@ import java.util.Date;
 public class TbSellPurchaseServiceImpl extends ServiceImpl<TbSellPurchaseMapper, TbSellPurchase>
         implements TbSellPurchaseService {
     @Resource
+    private RedisTemplate<String,Page<TbSellPurchase>> redisTemplate;
+    @Resource
     private TbShoppingcartService tbShoppingcartService;
     @Override
     public R<Page<TbSellPurchase>> getSellPurchasePageList(TbSellPurchase tbSellPurchase, Integer size, Integer current, HttpServletRequest request) {
@@ -34,10 +38,16 @@ public class TbSellPurchaseServiceImpl extends ServiceImpl<TbSellPurchaseMapper,
             if (null == size || null == current) {
                 return R.error("参数错误");
             }
+            String redisName = "com:lfg:rongxiaotong:sellPurchase";
+            Page<TbSellPurchase> sellPurchasePage = redisTemplate.opsForValue().get(redisName);
+            if (null != redisTemplate.opsForValue().get(redisName)) {
+                return R.success(sellPurchasePage);
+            }
             Page<TbSellPurchase> page = new Page<>(current, size);
             LambdaQueryWrapper<TbSellPurchase> wrapper = new LambdaQueryWrapper<>();
             wrapper.like(null != tbSellPurchase.getOwnName(), TbSellPurchase::getOwnName, tbSellPurchase.getOwnName());
             Page<TbSellPurchase> tbSellPurchasePage = this.page(page, wrapper);
+            redisTemplate.opsForValue().set(redisName,tbSellPurchasePage,60, TimeUnit.MINUTES);
             return R.success(tbSellPurchasePage);
         }
         return R.error("未登录");

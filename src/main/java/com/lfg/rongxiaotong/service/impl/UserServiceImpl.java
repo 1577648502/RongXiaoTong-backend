@@ -8,12 +8,15 @@ import com.lfg.rongxiaotong.mapper.UserMapper;
 import com.lfg.rongxiaotong.service.UserService;
 import com.lfg.rongxiaotong.utius.IsAdmin;
 import com.lfg.rongxiaotong.utius.R;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author liufaguang
@@ -23,6 +26,9 @@ import java.util.List;
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         implements UserService {
+    @Resource
+    private RedisTemplate<String,Page<User>> redisTemplate;
+
     @Override
     public R<User> login(User user, HttpServletRequest request) {
         //密码加密
@@ -126,6 +132,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
                 if (null == size || null == current) {
                     return R.error("参数错误");
                 }
+                String redisName = "com:lfg:rongxiaotong:user";
+                Page<User> users = redisTemplate.opsForValue().get(redisName);
+                if (null != redisTemplate.opsForValue().get(redisName)) {
+                    return R.success(users);
+                }
                 Page<User> page = new Page<>(current, size);
                 LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
                 wrapper.like(null != user.getId(), User::getId, user.getId());
@@ -139,6 +150,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
                 wrapper.like(null != user.getIsDelete(), User::getIsDelete, user.getIsDelete());
                 wrapper.orderByDesc(User::getUpdateTime);
                 Page<User> userPage = this.page(page, wrapper);
+                redisTemplate.opsForValue().set(redisName, userPage,60, TimeUnit.MINUTES);
                 return R.success(userPage);
             } else {
                 return R.error("用户非管理员");

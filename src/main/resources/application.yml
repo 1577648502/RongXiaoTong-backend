@@ -1,4 +1,9 @@
 spring:
+  redis:
+    host: 18.162.214.254
+    port: 6379
+    database: 0
+    password: 12345678
 
   servlet:
     multipart:
@@ -24,6 +29,8 @@ server:
   reactive:
     session:
       timeout: 60000s
+
+
 # 日志
 logging:
   level:

@@ -9,11 +9,14 @@ import com.lfg.rongxiaotong.mapper.TbOrderMapper;
 import com.lfg.rongxiaotong.service.TbOrderService;
 import com.lfg.rongxiaotong.utius.IsAdmin;
 import com.lfg.rongxiaotong.utius.R;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author liufaguang
@@ -23,20 +26,28 @@ import java.util.List;
 @Service
 public class TbOrderServiceImpl extends ServiceImpl<TbOrderMapper, TbOrder>
         implements TbOrderService {
+    @Resource
+    private RedisTemplate<String, Page<TbOrder>> redisTemplate;
+    private final String redisName = "com:lfg:rongxiaotong:order";
 
     @Override
     public R<Page<TbOrder>> getOrderPageList(TbOrder tbOrder, Integer size, Integer current, HttpServletRequest request) {
         String admin = IsAdmin.isAdmin(request);
         if (!admin.equals("未登录")) {
-                if (null == size || null == current) {
-                    return R.error("参数错误");
-                }
-                Page<TbOrder> page = new Page<>(current, size);
-                LambdaQueryWrapper<TbOrder> wrapper = new LambdaQueryWrapper<>();
-                wrapper.like(null != tbOrder.getOwnName(), TbOrder::getOwnName, tbOrder.getOwnName());
-                wrapper.orderByDesc(TbOrder::getUpdateTime);
-                Page<TbOrder> tbOrderPage = this.page(page, wrapper);
-                return R.success(tbOrderPage);
+            if (null == size || null == current) {
+                return R.error("参数错误");
+            }
+            Page<TbOrder> orderPage = redisTemplate.opsForValue().get(redisName);
+            if (null != redisTemplate.opsForValue().get(redisName)) {
+                return R.success(orderPage);
+            }
+            Page<TbOrder> page = new Page<>(current, size);
+            LambdaQueryWrapper<TbOrder> wrapper = new LambdaQueryWrapper<>();
+            wrapper.like(null != tbOrder.getOwnName(), TbOrder::getOwnName, tbOrder.getOwnName());
+            wrapper.orderByDesc(TbOrder::getUpdateTime);
+            Page<TbOrder> tbOrderPage = this.page(page, wrapper);
+            redisTemplate.opsForValue().set(redisName, tbOrderPage, 60, TimeUnit.MINUTES);
+            return R.success(tbOrderPage);
 
         }
         return R.error("未登录");
@@ -48,10 +59,10 @@ public class TbOrderServiceImpl extends ServiceImpl<TbOrderMapper, TbOrder>
         String admin = IsAdmin.isAdmin(request);
         if (!admin.equals("未登录")) {
 
-                if (null == orderId) {
-                    return R.error("参数错误");
-                }
-                return R.success(this.getById(orderId));
+            if (null == orderId) {
+                return R.error("参数错误");
+            }
+            return R.success(this.getById(orderId));
         }
         return R.error("未登录");
     }
