@@ -50,7 +50,7 @@ public class TbSellPurchaseServiceImpl extends ServiceImpl<TbSellPurchaseMapper,
             LambdaQueryWrapper<TbSellPurchase> wrapper = new LambdaQueryWrapper<>();
             wrapper.like(null != tbSellPurchase.getOwnName(), TbSellPurchase::getOwnName, tbSellPurchase.getOwnName());
             Page<TbSellPurchase> tbSellPurchasePage = this.page(page, wrapper);
-            redisTemplate.opsForValue().set(redisName+current,tbSellPurchasePage,60, TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set(redisName+current,tbSellPurchasePage,5, TimeUnit.MINUTES);
             return R.success(tbSellPurchasePage);
         }
         return R.error("未登录");

@@ -50,7 +50,7 @@ public class TbKnowledgeServiceImpl extends ServiceImpl<TbKnowledgeMapper, TbKno
             wrapper.like(null != tbKnowledge.getContent(), TbKnowledge::getContent, tbKnowledge.getContent());
             wrapper.orderByDesc(TbKnowledge::getUpdateTime);
             Page<TbKnowledge> tbKnowledgePage = this.page(page, wrapper);
-            redisTemplate.opsForValue().set(redisName + current, tbKnowledgePage, 60, TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set(redisName + current, tbKnowledgePage, 5, TimeUnit.MINUTES);
             return R.success(tbKnowledgePage);
         }
         return R.error("未登录");

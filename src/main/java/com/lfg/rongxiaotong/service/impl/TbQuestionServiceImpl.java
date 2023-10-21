@@ -44,7 +44,7 @@ public class TbQuestionServiceImpl extends ServiceImpl<TbQuestionMapper, TbQuest
             LambdaQueryWrapper<TbQuestion> wrapper = new LambdaQueryWrapper<>();
             wrapper.like(null != tbQuestion.getTitle(), TbQuestion::getTitle, tbQuestion.getTitle());
             Page<TbQuestion> tbQuestionPage = this.page(page, wrapper);
-            redisTemplate.opsForValue().set(redisName+current,tbQuestionPage,60, TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set(redisName+current,tbQuestionPage,5, TimeUnit.MINUTES);
             return R.success(tbQuestionPage);
         }
         return  R.error("未登录");

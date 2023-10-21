@@ -46,7 +46,7 @@ public class TbDiscussServiceImpl extends ServiceImpl<TbDiscussMapper, TbDiscuss
             wrapper.orderByDesc(TbDiscuss::getCreateTime);
             wrapper.like(null != tbDiscuss.getKnowledgeId(), TbDiscuss::getKnowledgeId, tbDiscuss.getKnowledgeId());
             Page<TbDiscuss> tbDiscussPage = this.page(page, wrapper);
-            redisTemplate.opsForValue().set(redisName+current,tbDiscussPage,60, TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set(redisName+current,tbDiscussPage,5, TimeUnit.MINUTES);
             return R.success(tbDiscussPage);
         }
         return  R.error("未登录");

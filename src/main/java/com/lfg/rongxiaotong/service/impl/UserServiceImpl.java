@@ -137,7 +137,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
                 if (null == size || null == current) {
                     return R.error("参数错误");
                 }
-                Page<User> users = redisTemplate.opsForValue().get(redisName+ ":"+request.getSession().getId());
+                Page<User> users = redisTemplate.opsForValue().get(redisName+ ":"+request.getSession().getId()+":"+current);
                 if (null != redisTemplate.opsForValue().get(redisName)) {
                     return R.success(users);
                 }
@@ -154,7 +154,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
                 wrapper.like(null != user.getIsDelete(), User::getIsDelete, user.getIsDelete());
                 wrapper.orderByDesc(User::getUpdateTime);
                 Page<User> userPage = this.page(page, wrapper);
-                redisTemplate.opsForValue().set(redisName+ ":"+request.getSession().getId(), userPage,60, TimeUnit.MINUTES);
+                redisTemplate.opsForValue().set(redisName+ ":"+request.getSession().getId()+":"+current, userPage,5, TimeUnit.MINUTES);
                 return R.success(userPage);
             } else {
                 return R.error("用户非管理员");

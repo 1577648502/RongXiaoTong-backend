@@ -44,7 +44,7 @@ public class TbBankUserServiceImpl extends ServiceImpl<TbBankUserMapper, TbBankU
             LambdaQueryWrapper<TbBankUser> wrapper = new LambdaQueryWrapper<>();
             wrapper.like(null != tbBankUser.getUserName(), TbBankUser::getUserName, tbBankUser.getUserName());
             Page<TbBankUser> tbBankUserPage = this.page(page, wrapper);
-            redisTemplate.opsForValue().set(redisName+current,tbBankUserPage,60, TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set(redisName+current,tbBankUserPage,5, TimeUnit.MINUTES);
             return R.success(tbBankUserPage);
         }
         return  R.error("未登录");

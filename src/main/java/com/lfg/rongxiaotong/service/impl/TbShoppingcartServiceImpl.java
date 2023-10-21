@@ -20,6 +20,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author liufaguang
@@ -31,12 +32,13 @@ public class TbShoppingcartServiceImpl extends ServiceImpl<TbShoppingcartMapper,
         implements TbShoppingcartService {
     @Resource
     private RedisTemplate<String, List<TbShoppingcart>> redisTemplate;
+    String redisName = "com:lfg:rongxiaotong:shoppingCart:";
 
     @Override
     public R<List<TbShoppingcart>> getShoppingcartPageList(TbShoppingcart tbShoppingcart, HttpServletRequest request) {
         String admin = IsAdmin.isAdmin(request);
         if (!admin.equals("未登录")) {
-            String redisName = "com:lfg:rongxiaotong:shoppingCart:";
+
             List<TbShoppingcart> RedisShoppingCart = redisTemplate.opsForValue().get(redisName + request.getSession().getId());
             if ( RedisShoppingCart!= null){
                 return R.success(RedisShoppingCart);
@@ -45,7 +47,7 @@ public class TbShoppingcartServiceImpl extends ServiceImpl<TbShoppingcartMapper,
             wrapper.like(null != tbShoppingcart.getOwnName(), TbShoppingcart::getOwnName, tbShoppingcart.getOwnName());
             wrapper.orderByDesc(TbShoppingcart::getUpdateTime);
             List<TbShoppingcart> shoppingcart = this.list(wrapper);
-            redisTemplate.opsForValue().set(redisName + request.getSession().getId(), shoppingcart);
+            redisTemplate.opsForValue().set(redisName + request.getSession().getId(), shoppingcart,5, TimeUnit.MINUTES);
             return R.success(shoppingcart);
         }
         return R.error("未登录");

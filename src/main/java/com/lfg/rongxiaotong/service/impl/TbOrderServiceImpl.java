@@ -47,7 +47,7 @@ public class TbOrderServiceImpl extends ServiceImpl<TbOrderMapper, TbOrder>
             wrapper.like(null != tbOrder.getOwnName(), TbOrder::getOwnName, tbOrder.getOwnName());
             wrapper.orderByDesc(TbOrder::getUpdateTime);
             Page<TbOrder> tbOrderPage = this.page(page, wrapper);
-            redisTemplate.opsForValue().set(redisName+current, tbOrderPage, 60, TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set(redisName+current, tbOrderPage, 5, TimeUnit.MINUTES);
             return R.success(tbOrderPage);
 
         }

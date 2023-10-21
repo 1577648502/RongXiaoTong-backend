@@ -43,7 +43,7 @@ public class TbReserveServiceImpl extends ServiceImpl<TbReserveMapper, TbReserve
             LambdaQueryWrapper<TbReserve> wrapper = new LambdaQueryWrapper<>();
             wrapper.like(null != tbReserve.getPlantName(), TbReserve::getPlantName, tbReserve.getPlantName());
             Page<TbReserve> tbReservePage = this.page(page, wrapper);
-            redisTemplate.opsForValue().set(redisName+current,tbReservePage,60, TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set(redisName+current,tbReservePage,5, TimeUnit.MINUTES);
             return R.success(tbReservePage);
         }
         return  R.error("未登录");
