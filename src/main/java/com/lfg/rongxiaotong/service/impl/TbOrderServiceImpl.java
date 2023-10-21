@@ -28,7 +28,7 @@ public class TbOrderServiceImpl extends ServiceImpl<TbOrderMapper, TbOrder>
         implements TbOrderService {
     @Resource
     private RedisTemplate<String, Page<TbOrder>> redisTemplate;
-    private final String redisName = "com:lfg:rongxiaotong:order";
+    private final String redisName = "com:lfg:rongxiaotong:order:";
 
     @Override
     public R<Page<TbOrder>> getOrderPageList(TbOrder tbOrder, Integer size, Integer current, HttpServletRequest request) {
@@ -37,7 +37,7 @@ public class TbOrderServiceImpl extends ServiceImpl<TbOrderMapper, TbOrder>
             if (null == size || null == current) {
                 return R.error("参数错误");
             }
-            Page<TbOrder> orderPage = redisTemplate.opsForValue().get(redisName);
+            Page<TbOrder> orderPage = redisTemplate.opsForValue().get(redisName+ current);
             if (null != redisTemplate.opsForValue().get(redisName)) {
                 return R.success(orderPage);
             }
@@ -46,7 +46,7 @@ public class TbOrderServiceImpl extends ServiceImpl<TbOrderMapper, TbOrder>
             wrapper.like(null != tbOrder.getOwnName(), TbOrder::getOwnName, tbOrder.getOwnName());
             wrapper.orderByDesc(TbOrder::getUpdateTime);
             Page<TbOrder> tbOrderPage = this.page(page, wrapper);
-            redisTemplate.opsForValue().set(redisName, tbOrderPage, 60, TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set(redisName+current, tbOrderPage, 5, TimeUnit.MINUTES);
             return R.success(tbOrderPage);
 
         }

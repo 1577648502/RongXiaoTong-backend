@@ -21,8 +21,8 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public R<String> register(@RequestBody User user ) {
-        return userService.register(user);
+    public R<String> register(@RequestBody User user ,HttpServletRequest request) {
+        return userService.register(user,request);
     }
     @PostMapping("/getPageUser")
     public R<Page<User>> getPageUser(@RequestBody User user,Integer size,Integer current,HttpServletRequest request) {

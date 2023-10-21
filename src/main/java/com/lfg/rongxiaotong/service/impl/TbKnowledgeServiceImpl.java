@@ -19,15 +19,15 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
-* @author liufaguang
-* @description 针对表【tb_knowledge】的数据库操作Service实现
-* @createDate 2023-10-12 22:22:35
-*/
+ * @author liufaguang
+ * @description 针对表【tb_knowledge】的数据库操作Service实现
+ * @createDate 2023-10-12 22:22:35
+ */
 @Service
 public class TbKnowledgeServiceImpl extends ServiceImpl<TbKnowledgeMapper, TbKnowledge>
-    implements TbKnowledgeService{
+        implements TbKnowledgeService {
     @Resource
-    private RedisTemplate<String,Page<TbKnowledge>> redisTemplate;
+    private RedisTemplate<String, Page<TbKnowledge>> redisTemplate;
 
     @Override
     public R<Page<TbKnowledge>> getKnowledgePageList(TbKnowledge tbKnowledge, Integer size, Integer current, HttpServletRequest request) {
@@ -36,8 +36,8 @@ public class TbKnowledgeServiceImpl extends ServiceImpl<TbKnowledgeMapper, TbKno
             if (null == size || null == current) {
                 return R.error("参数错误");
             }
-            String redisName = "com:lfg:rongxiaotong:knowledge";
-            Page<TbKnowledge> knowledgePage = redisTemplate.opsForValue().get(redisName);
+            String redisName = "com:lfg:rongxiaotong:knowledge:";
+            Page<TbKnowledge> knowledgePage = redisTemplate.opsForValue().get(redisName+ current);
             if (null != redisTemplate.opsForValue().get(redisName)) {
                 return R.success(knowledgePage);
             }
@@ -48,10 +48,10 @@ public class TbKnowledgeServiceImpl extends ServiceImpl<TbKnowledgeMapper, TbKno
             wrapper.like(null != tbKnowledge.getContent(), TbKnowledge::getContent, tbKnowledge.getContent());
             wrapper.orderByDesc(TbKnowledge::getUpdateTime);
             Page<TbKnowledge> tbKnowledgePage = this.page(page, wrapper);
-            redisTemplate.opsForValue().set(redisName,tbKnowledgePage,60, TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set(redisName + current, tbKnowledgePage, 5, TimeUnit.MINUTES);
             return R.success(tbKnowledgePage);
         }
-        return  R.error("未登录");
+        return R.error("未登录");
 
     }
 
@@ -65,7 +65,7 @@ public class TbKnowledgeServiceImpl extends ServiceImpl<TbKnowledgeMapper, TbKno
             }
             return R.success(this.getById(knowledgeId));
         }
-        return  R.error("未登录");
+        return R.error("未登录");
     }
 
     @Override
@@ -74,7 +74,7 @@ public class TbKnowledgeServiceImpl extends ServiceImpl<TbKnowledgeMapper, TbKno
         if (!admin.equals("未登录")) {
             if (admin.equals("admin")) {
 
-                if (null == tbKnowledge ) {
+                if (null == tbKnowledge) {
                     return R.error("参数错误");
                 }
                 boolean saved = this.updateById(tbKnowledge);
@@ -87,16 +87,16 @@ public class TbKnowledgeServiceImpl extends ServiceImpl<TbKnowledgeMapper, TbKno
 
 
         }
-        return  R.error("未登录");
+        return R.error("未登录");
     }
 
     @Override
     public R<String> addKnowledge(TbKnowledge tbKnowledge, HttpServletRequest request) {
-        User user = (User)request.getSession().getAttribute("data");
+        User user = (User) request.getSession().getAttribute("data");
         String admin = IsAdmin.isAdmin(request);
         if (!admin.equals("未登录")) {
             if (admin.equals("admin")) {
-                if (null == tbKnowledge ) {
+                if (null == tbKnowledge) {
                     return R.error("参数错误");
                 }
                 tbKnowledge.setOwnName(user.getUserName());
@@ -110,7 +110,7 @@ public class TbKnowledgeServiceImpl extends ServiceImpl<TbKnowledgeMapper, TbKno
                 return R.error("用户非管理员");
             }
         }
-        return  R.error("未登录");
+        return R.error("未登录");
     }
 
     @Override
@@ -133,7 +133,7 @@ public class TbKnowledgeServiceImpl extends ServiceImpl<TbKnowledgeMapper, TbKno
 
 
         }
-        return  R.error("未登录");
+        return R.error("未登录");
     }
 }
 

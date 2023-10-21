@@ -26,12 +26,13 @@ public class TbAddressServiceImpl extends ServiceImpl<TbAddressMapper, TbAddress
     implements TbAddressService{
     @Resource
     private RedisTemplate<String,List<TbAddress>> redisTemplate;
+    String redisName = "com:lfg:rongxiaotong:address:";
     @Override
     public R<List<TbAddress>> getAddressPageList(TbAddress tbAddress, HttpServletRequest request) {
         String admin = IsAdmin.isAdmin(request);
         if (!admin.equals("未登录")) {
-            String redisName = "com:lfg:rongxiaotong:address";
-            List<TbAddress> addressPage = redisTemplate.opsForValue().get(redisName);
+
+            List<TbAddress> addressPage = redisTemplate.opsForValue().get(redisName+request.getSession().getId());
             if (null != redisTemplate.opsForValue().get(redisName)) {
                 return R.success(addressPage);
             }
@@ -39,7 +40,7 @@ public class TbAddressServiceImpl extends ServiceImpl<TbAddressMapper, TbAddress
             wrapper.eq(null != tbAddress.getOwnName(), TbAddress::getOwnName, tbAddress.getOwnName());
             wrapper.eq(null != tbAddress.getIsDefault(), TbAddress::getIsDefault, tbAddress.getIsDefault());
             List<TbAddress> tbAddressPage = this.list(wrapper);
-            redisTemplate.opsForValue().set(redisName,tbAddressPage,60, TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set(redisName+request.getSession().getId(),tbAddressPage,5, TimeUnit.MINUTES);
             return R.success(tbAddressPage);
         }
         return  R.error("未登录");
@@ -68,6 +69,7 @@ public class TbAddressServiceImpl extends ServiceImpl<TbAddressMapper, TbAddress
             }
             boolean saved = this.updateById(tbAddress);
             if (saved) {
+                redisTemplate.delete(redisName+request.getSession().getId());
                 return R.success("更新成功");
             }
         }
@@ -96,6 +98,7 @@ public class TbAddressServiceImpl extends ServiceImpl<TbAddressMapper, TbAddress
                 wrapper.eq(TbAddress::getId,newAddress);
                 boolean update = this.update(newTbAddress, wrapper);
                 if (update){
+                    redisTemplate.delete(redisName+request.getSession().getId());
                     return R.success("更新成功");
                 }
             }
@@ -115,6 +118,7 @@ public class TbAddressServiceImpl extends ServiceImpl<TbAddressMapper, TbAddress
             tbAddress.setOwnName(user.getUserName());
             boolean saved = this.save(tbAddress);
             if (saved) {
+                redisTemplate.delete(redisName+request.getSession().getId());
                 return R.success("添加成功");
             }
         }
@@ -130,6 +134,7 @@ public class TbAddressServiceImpl extends ServiceImpl<TbAddressMapper, TbAddress
             }
             boolean saved = this.removeById(addressId);
             if (saved) {
+                redisTemplate.delete(redisName+request.getSession().getId());
                 return R.success("删除成功");
             }
         }

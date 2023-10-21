@@ -35,7 +35,7 @@ public interface UserService extends IService<User> {
      * @param user
      * @return 用户注册结果字符串
      */
-    R<String> register(User user);
+    R<String> register(User user,HttpServletRequest request);
 
     /**
      * 退出登录

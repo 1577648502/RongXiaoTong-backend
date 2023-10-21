@@ -34,8 +34,8 @@ public class TbDiscussServiceImpl extends ServiceImpl<TbDiscussMapper, TbDiscuss
             if (null == size || null == current) {
                 return R.error("参数错误");
             }
-            String redisName = "com:lfg:rongxiaotong:discuss";
-            Page<TbDiscuss> discussPage = redisTemplate.opsForValue().get(redisName);
+            String redisName = "com:lfg:rongxiaotong:discuss:";
+            Page<TbDiscuss> discussPage = redisTemplate.opsForValue().get(redisName+ current);
             if (null != redisTemplate.opsForValue().get(redisName)) {
                 return R.success(discussPage);
             }
@@ -44,7 +44,7 @@ public class TbDiscussServiceImpl extends ServiceImpl<TbDiscussMapper, TbDiscuss
             wrapper.orderByDesc(TbDiscuss::getCreateTime);
             wrapper.like(null != tbDiscuss.getKnowledgeId(), TbDiscuss::getKnowledgeId, tbDiscuss.getKnowledgeId());
             Page<TbDiscuss> tbDiscussPage = this.page(page, wrapper);
-            redisTemplate.opsForValue().set(redisName,tbDiscussPage,60, TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set(redisName+current,tbDiscussPage,5, TimeUnit.MINUTES);
             return R.success(tbDiscussPage);
         }
         return  R.error("未登录");

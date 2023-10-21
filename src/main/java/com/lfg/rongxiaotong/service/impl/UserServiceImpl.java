@@ -28,19 +28,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         implements UserService {
     @Resource
     private RedisTemplate<String,Page<User>> redisTemplate;
-
+    private final String redisName = "com:lfg:rongxiaotong:user";
     @Override
     public R<User> login(User user, HttpServletRequest request) {
         //密码加密
         user.setPassword(DigestUtils.md5DigestAsHex(user.getPassword().getBytes()));
         System.out.println(user.getPassword());
         System.out.println(user.getUserName());
+
+
         //查询
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(User::getUserName, user.getUserName());
         queryWrapper.eq(User::getPassword, user.getPassword());
         User selectOne = this.getOne(queryWrapper);
-
         if (selectOne != null) {
             //数据脱敏返回到前端
             User newUser = getUser(selectOne);
@@ -53,9 +54,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
     @Override
     public R<User> info(HttpServletRequest request) {
-        User data = (User) request.getSession().getAttribute("data");
-        if (data != null) {
-            User byId = this.getById(data.getId());
+        User user = (User) request.getSession().getAttribute("data");
+//        User redisUser = redisTemplateUser.opsForValue().get(redisName + ":"  + request.getSession().getId());
+        if (user != null) {
+            User byId = this.getById(user.getId());
             if (byId == null) {
                 return R.error("用户未登录");
             } else {
@@ -67,7 +69,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
-    public R<String> register(User user) {
+    public R<String> register(User user,HttpServletRequest request) {
         if (user.getUserName().isEmpty() || user.getPassword().isEmpty()) {
             return R.error("用户名密码不能为空");
         }
@@ -79,6 +81,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             user.setType(1);
             boolean insert = this.save(user);
             if (insert) {
+                redisTemplate.delete(redisName+ ":"  + request.getSession().getId());
                 return R.success("注册成功");
             }
         }
@@ -87,7 +90,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
     @Override
     public R<String> logout(HttpServletRequest request) {
-        request.removeAttribute("data");
+        request.getSession().removeAttribute("data");
         return R.success("退出成功");
     }
 
@@ -108,6 +111,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
                     boolean update = this.updateById(newUser);
                     if (update) {
                         info(request);
+                        redisTemplate.delete(redisName+ ":"  + request.getSession().getId());
+
                         return R.success("更新成功");
                     } else {
                         return R.error("更新失败");
@@ -132,8 +137,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
                 if (null == size || null == current) {
                     return R.error("参数错误");
                 }
-                String redisName = "com:lfg:rongxiaotong:user";
-                Page<User> users = redisTemplate.opsForValue().get(redisName);
+                Page<User> users = redisTemplate.opsForValue().get(redisName+ ":"+request.getSession().getId()+":"+current);
                 if (null != redisTemplate.opsForValue().get(redisName)) {
                     return R.success(users);
                 }
@@ -150,7 +154,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
                 wrapper.like(null != user.getIsDelete(), User::getIsDelete, user.getIsDelete());
                 wrapper.orderByDesc(User::getUpdateTime);
                 Page<User> userPage = this.page(page, wrapper);
-                redisTemplate.opsForValue().set(redisName, userPage,60, TimeUnit.MINUTES);
+                redisTemplate.opsForValue().set(redisName+ ":"+request.getSession().getId()+":"+current, userPage,5, TimeUnit.MINUTES);
                 return R.success(userPage);
             } else {
                 return R.error("用户非管理员");
@@ -180,6 +184,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         if (admin.equals("admin")) {
             boolean update = this.removeByIds(ids);
             if (update) {
+                redisTemplate.delete(redisName+ ":"  + request.getSession().getId());
                 return R.success("删除成功");
             } else {
                 return R.error("删除失败");
@@ -206,6 +211,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
                 boolean update = this.updateById(newUser);
                 if (update) {
                     info(request);
+                    redisTemplate.delete(redisName+ ":"  + request.getSession().getId());
                     return R.success("更新成功");
 
                 } else {

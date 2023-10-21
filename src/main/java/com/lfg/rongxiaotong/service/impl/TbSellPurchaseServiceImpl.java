@@ -38,8 +38,8 @@ public class TbSellPurchaseServiceImpl extends ServiceImpl<TbSellPurchaseMapper,
             if (null == size || null == current) {
                 return R.error("参数错误");
             }
-            String redisName = "com:lfg:rongxiaotong:sellPurchase";
-            Page<TbSellPurchase> sellPurchasePage = redisTemplate.opsForValue().get(redisName);
+            String redisName = "com:lfg:rongxiaotong:sellPurchase:";
+            Page<TbSellPurchase> sellPurchasePage = redisTemplate.opsForValue().get(redisName+ current);
             if (null != redisTemplate.opsForValue().get(redisName)) {
                 return R.success(sellPurchasePage);
             }
@@ -47,7 +47,7 @@ public class TbSellPurchaseServiceImpl extends ServiceImpl<TbSellPurchaseMapper,
             LambdaQueryWrapper<TbSellPurchase> wrapper = new LambdaQueryWrapper<>();
             wrapper.like(null != tbSellPurchase.getOwnName(), TbSellPurchase::getOwnName, tbSellPurchase.getOwnName());
             Page<TbSellPurchase> tbSellPurchasePage = this.page(page, wrapper);
-            redisTemplate.opsForValue().set(redisName,tbSellPurchasePage,60, TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set(redisName+current,tbSellPurchasePage,5, TimeUnit.MINUTES);
             return R.success(tbSellPurchasePage);
         }
         return R.error("未登录");
