@@ -10,6 +10,7 @@ import com.lfg.rongxiaotong.mapper.TbOrderMapper;
 import com.lfg.rongxiaotong.service.TbOrderService;
 import com.lfg.rongxiaotong.utius.IsAdmin;
 import com.lfg.rongxiaotong.utius.R;
+import com.lfg.rongxiaotong.utius.RedisDelKeys;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -30,6 +32,8 @@ public class TbOrderServiceImpl extends ServiceImpl<TbOrderMapper, TbOrder>
     @Resource
     private RedisTemplate<String, Page<TbOrder>> redisTemplate;
     private final String redisName = "com:lfg:rongxiaotong:order:";
+    @Resource
+    private RedisDelKeys redisDelKeys;
 
     @Override
     public R<Page<TbOrder>> getOrderPageList(TbOrder tbOrder, Integer size, Integer current, HttpServletRequest request) {
@@ -38,8 +42,12 @@ public class TbOrderServiceImpl extends ServiceImpl<TbOrderMapper, TbOrder>
             if (null == size || null == current) {
                 return R.error("参数错误");
             }
-            Page<TbOrder> orderPage = redisTemplate.opsForValue().get(redisName+ current);
-            if (null != redisTemplate.opsForValue().get(redisName)) {
+            System.out.println("tb" + tbOrder);
+
+            String newRedisName = redisName + request.getSession().getId() + ":" + current;
+            System.out.println(newRedisName);
+            Page<TbOrder> orderPage = redisTemplate.opsForValue().get(newRedisName);
+            if (null != redisTemplate.opsForValue().get(newRedisName) && tbOrder.getOwnName().isEmpty()) {
                 return R.success(orderPage);
             }
             Page<TbOrder> page = new Page<>(current, size);
@@ -47,7 +55,9 @@ public class TbOrderServiceImpl extends ServiceImpl<TbOrderMapper, TbOrder>
             wrapper.like(null != tbOrder.getOwnName(), TbOrder::getOwnName, tbOrder.getOwnName());
             wrapper.orderByDesc(TbOrder::getUpdateTime);
             Page<TbOrder> tbOrderPage = this.page(page, wrapper);
-            redisTemplate.opsForValue().set(redisName+current, tbOrderPage, 5, TimeUnit.MINUTES);
+            if (tbOrder.getOwnName().isEmpty()) {
+                redisTemplate.opsForValue().set(newRedisName, tbOrderPage, 5, TimeUnit.MINUTES);
+            }
             return R.success(tbOrderPage);
 
         }
@@ -78,6 +88,7 @@ public class TbOrderServiceImpl extends ServiceImpl<TbOrderMapper, TbOrder>
                 }
                 boolean saved = this.updateById(tbOrder);
                 if (saved) {
+                    redisDelKeys.redisDelKeys(redisName,request);
                     return R.success("更新成功");
                 }
             } else {
@@ -102,6 +113,7 @@ public class TbOrderServiceImpl extends ServiceImpl<TbOrderMapper, TbOrder>
                 tbOrder.setIsDelete(0);
                 boolean saved = this.save(tbOrder);
                 if (saved) {
+                    redisDelKeys.redisDelKeys(redisName,request);
                     return R.success("添加成功");
                 }
             }
@@ -122,6 +134,7 @@ public class TbOrderServiceImpl extends ServiceImpl<TbOrderMapper, TbOrder>
                 if (update) {
                     return R.success("删除成功");
                 } else {
+                    redisDelKeys.redisDelKeys(redisName,request);
                     return R.error("删除失败");
                 }
             } else {
