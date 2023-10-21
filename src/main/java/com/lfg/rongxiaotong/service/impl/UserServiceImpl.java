@@ -28,7 +28,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         implements UserService {
     @Resource
     private RedisTemplate<String,Page<User>> redisTemplate;
-    private final String redisName = "com:lfg:rongxiaotong:user";
+    private String redisName = "com:lfg:rongxiaotong:user";
     @Override
     public R<User> login(User user, HttpServletRequest request) {
         //密码加密
@@ -129,16 +129,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
     @Override
     public R<Page<User>> getPageUSerInfo(User user, Integer size, Integer current, HttpServletRequest request) {
-
-
         String admin = IsAdmin.isAdmin(request);
         if (!admin.equals("未登录")) {
             if (admin.equals("admin")) {
                 if (null == size || null == current) {
                     return R.error("参数错误");
                 }
-                Page<User> users = redisTemplate.opsForValue().get(redisName+ ":"+request.getSession().getId()+":"+current);
-                if (null != redisTemplate.opsForValue().get(redisName)) {
+                redisName = redisName + current + ":" + request.getSession().getId() + ":" + current;
+                Page<User> users = redisTemplate.opsForValue().get(redisName);
+                if (null != redisTemplate.opsForValue().get(redisName)&& (user.getUserName()==null||user.getUserName().isEmpty())) {
                     return R.success(users);
                 }
                 Page<User> page = new Page<>(current, size);
@@ -154,7 +153,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
                 wrapper.like(null != user.getIsDelete(), User::getIsDelete, user.getIsDelete());
                 wrapper.orderByDesc(User::getUpdateTime);
                 Page<User> userPage = this.page(page, wrapper);
-                redisTemplate.opsForValue().set(redisName+ ":"+request.getSession().getId()+":"+current, userPage,5, TimeUnit.MINUTES);
+                if (user.getUserName()==null||user.getUserName().isEmpty()) {
+                    redisTemplate.opsForValue().set(redisName, userPage, 5, TimeUnit.MINUTES);
+                }
                 return R.success(userPage);
             } else {
                 return R.error("用户非管理员");

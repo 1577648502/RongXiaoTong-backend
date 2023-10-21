@@ -9,6 +9,7 @@ import com.lfg.rongxiaotong.mapper.TbKnowledgeMapper;
 import com.lfg.rongxiaotong.service.TbKnowledgeService;
 import com.lfg.rongxiaotong.utius.IsAdmin;
 import com.lfg.rongxiaotong.utius.R;
+import com.lfg.rongxiaotong.utius.RedisDelKeys;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,10 @@ public class TbKnowledgeServiceImpl extends ServiceImpl<TbKnowledgeMapper, TbKno
         implements TbKnowledgeService {
     @Resource
     private RedisTemplate<String, Page<TbKnowledge>> redisTemplate;
+    private final String redisName = "com:lfg:rongxiaotong:knowledge:";
+
+    @Resource
+    private RedisDelKeys redisDelKeys;
 
     @Override
     public R<Page<TbKnowledge>> getKnowledgePageList(TbKnowledge tbKnowledge, Integer size, Integer current, HttpServletRequest request) {
@@ -36,9 +41,9 @@ public class TbKnowledgeServiceImpl extends ServiceImpl<TbKnowledgeMapper, TbKno
             if (null == size || null == current) {
                 return R.error("参数错误");
             }
-            String redisName = "com:lfg:rongxiaotong:knowledge:";
-            Page<TbKnowledge> knowledgePage = redisTemplate.opsForValue().get(redisName+ current);
-            if (null != redisTemplate.opsForValue().get(redisName)) {
+            String newRedisName = redisName + request.getSession().getId() + ":" + current;
+            Page<TbKnowledge> knowledgePage = redisTemplate.opsForValue().get(newRedisName);
+            if (null != redisTemplate.opsForValue().get(newRedisName)&& (tbKnowledge.getOwnName().isEmpty()&&tbKnowledge.getTitle().isEmpty() &&tbKnowledge.getContent().isEmpty())) {
                 return R.success(knowledgePage);
             }
             Page<TbKnowledge> page = new Page<>(current, size);
@@ -48,7 +53,9 @@ public class TbKnowledgeServiceImpl extends ServiceImpl<TbKnowledgeMapper, TbKno
             wrapper.like(null != tbKnowledge.getContent(), TbKnowledge::getContent, tbKnowledge.getContent());
             wrapper.orderByDesc(TbKnowledge::getUpdateTime);
             Page<TbKnowledge> tbKnowledgePage = this.page(page, wrapper);
-            redisTemplate.opsForValue().set(redisName + current, tbKnowledgePage, 5, TimeUnit.MINUTES);
+            if (tbKnowledge.getOwnName().isEmpty()&&tbKnowledge.getTitle().isEmpty()&&tbKnowledge.getContent().isEmpty()) {
+                redisTemplate.opsForValue().set(newRedisName, tbKnowledgePage, 5, TimeUnit.MINUTES);
+            }
             return R.success(tbKnowledgePage);
         }
         return R.error("未登录");
@@ -79,6 +86,7 @@ public class TbKnowledgeServiceImpl extends ServiceImpl<TbKnowledgeMapper, TbKno
                 }
                 boolean saved = this.updateById(tbKnowledge);
                 if (saved) {
+                    redisDelKeys.redisDelKeys(redisName,request);
                     return R.success("更新成功");
                 }
             } else {
@@ -104,6 +112,7 @@ public class TbKnowledgeServiceImpl extends ServiceImpl<TbKnowledgeMapper, TbKno
                 tbKnowledge.setUpdateTime(new Date());
                 boolean saved = this.save(tbKnowledge);
                 if (saved) {
+                    redisDelKeys.redisDelKeys(redisName,request);
                     return R.success("添加成功");
                 }
             } else {
@@ -125,6 +134,7 @@ public class TbKnowledgeServiceImpl extends ServiceImpl<TbKnowledgeMapper, TbKno
                 }
                 boolean saved = this.removeByIds(knowledgeId);
                 if (saved) {
+                    redisDelKeys.redisDelKeys(redisName,request);
                     return R.success("删除成功");
                 }
             } else {
