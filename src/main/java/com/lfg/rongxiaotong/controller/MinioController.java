@@ -43,19 +43,25 @@ public class MinioController {
     public R<ImageVo> uploadFile(@RequestPart("file") MultipartFile multipartFile, HttpServletRequest request) {
         ImageVo imageVo = new ImageVo();
         String result = validFile(multipartFile);
+        String originalFilename = multipartFile.getOriginalFilename();
+        String prefix = "";
+        //获取文件后缀
+        if (originalFilename != null) {
+            prefix = originalFilename.substring(originalFilename.lastIndexOf(".")+1);
+        }
         //判断图片是否符合条件
         if (!"success".equals(result)) {
             return uploadError(imageVo, multipartFile, result);
         }
         // 文件重命名
         String uuid = RandomStringUtils.randomAlphanumeric(8);
-        String filename = uuid + "-" + multipartFile.getOriginalFilename();
+        String filename = uuid + "-" + originalFilename;
         try {
             //BufferedImage转MultipartFile
             BufferedImage bufferedImage = sizeImg(multipartFile);
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            ImageIO.write(bufferedImage, "jpg", outputStream);
-            MultipartFile newMultipartFile = new MockMultipartFile("file", "filename.jpg", "image/jpeg", outputStream.toByteArray());
+            ImageIO.write(bufferedImage, prefix, outputStream);
+            MultipartFile newMultipartFile = new MockMultipartFile("file", filename, multipartFile.getContentType(), outputStream.toByteArray());
             //上传到minio文件吴福气
             String upload = minioUtilS.upload(newMultipartFile, filename);
             if (upload != null) {
@@ -86,6 +92,9 @@ public class MinioController {
      * @param multipartFile 多部分文件
      */
     private String validFile(MultipartFile multipartFile) {
+        if (multipartFile == null){
+            return  "文件不能为空";
+        }
         // 文件大小
         long fileSize = multipartFile.getSize();
         // 文件后缀
@@ -93,7 +102,7 @@ public class MinioController {
         if (fileSize > ONE_M) {
             return "文件大小不能超过 5M";
         }
-        if (!Arrays.asList("jpeg", "jpg", "svg", "png", "webp", "jiff").contains(fileSuffix)) {
+        if (!Arrays.asList("jpeg", "jpg", "svg", "png").contains(fileSuffix)) {
             return "文件类型错误";
         }
         return "success";
